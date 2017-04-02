@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WirelessNetworkSimulationApp", "WirelessNetworkSymulation\WirelessNetworkSimulationApp.csproj", "{C7FC52BB-5598-4461-9A66-A866D146C145}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WirelessNetworkSimulationController", "WirelessNetworkSymulationController\WirelessNetworkSimulationController.csproj", "{D9CF280B-96B8-4D3B-8E76-7231DEB7EAFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WirelessNetworkSimulationModel", "WirelessNetworkSymulationModel\WirelessNetworkSimulationModel.csproj", "{68E993AE-89A8-4BD0-86F0-D5D356569381}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WirelessNetworkSimulationView", "WirelessNetworkSymulationView\WirelessNetworkSimulationView.csproj", "{F657C880-620D-4CB3-A089-F617215753B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WirelessNetworkComponents", "WirelessNetworkComponents\WirelessNetworkComponents.csproj", "{B5B3666D-F97B-4B76-9B6E-21F03CB2410C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{4F690952-E697-46BC-AA27-2CB22ADEAB89}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7FC52BB-5598-4461-9A66-A866D146C145}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7FC52BB-5598-4461-9A66-A866D146C145}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7FC52BB-5598-4461-9A66-A866D146C145}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7FC52BB-5598-4461-9A66-A866D146C145}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9CF280B-96B8-4D3B-8E76-7231DEB7EAFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9CF280B-96B8-4D3B-8E76-7231DEB7EAFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9CF280B-96B8-4D3B-8E76-7231DEB7EAFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9CF280B-96B8-4D3B-8E76-7231DEB7EAFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68E993AE-89A8-4BD0-86F0-D5D356569381}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68E993AE-89A8-4BD0-86F0-D5D356569381}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68E993AE-89A8-4BD0-86F0-D5D356569381}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68E993AE-89A8-4BD0-86F0-D5D356569381}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F657C880-620D-4CB3-A089-F617215753B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F657C880-620D-4CB3-A089-F617215753B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F657C880-620D-4CB3-A089-F617215753B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F657C880-620D-4CB3-A089-F617215753B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5B3666D-F97B-4B76-9B6E-21F03CB2410C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5B3666D-F97B-4B76-9B6E-21F03CB2410C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5B3666D-F97B-4B76-9B6E-21F03CB2410C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5B3666D-F97B-4B76-9B6E-21F03CB2410C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F690952-E697-46BC-AA27-2CB22ADEAB89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F690952-E697-46BC-AA27-2CB22ADEAB89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F690952-E697-46BC-AA27-2CB22ADEAB89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F690952-E697-46BC-AA27-2CB22ADEAB89}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
