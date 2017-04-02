@@ -73,7 +73,7 @@ namespace WirelessNetworkComponents
                 _processes.RemoveAt(0);
                 if (current.Value.IsSleeped)
                 {
-                    current.Value.Activate(_processes.Last().Key);
+                    current.Value.Activate(_processes.Last().Key-MainClock);
                     _processes.Add(current.Value.EventTime, current.Value);
                     continue;
                 }
@@ -91,7 +91,7 @@ namespace WirelessNetworkComponents
         {
             ++_processesNumber;
             var tmPackageProcess = new PackageProcess(_transmitters[index],CreateNewProcess,_transmissionChannel.SendFrame,_transmissionChannel.EndOfTransmission,_transmissionChannel.Remove ,MainClock, _transmissionChannel,_processesNumber);
-            tmPackageProcess.Activate(Convert.ToDouble(CGPk.Next(0,50))/10);
+            tmPackageProcess.Activate(Convert.ToDouble(CGPk.Next(0,15)));
             _processes.Add(tmPackageProcess.EventTime,tmPackageProcess);
         } 
     }
