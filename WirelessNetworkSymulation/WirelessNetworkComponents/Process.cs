@@ -44,8 +44,6 @@ namespace WirelessNetworkComponents
             protected set { _phase = value; }
         }
 
-        public abstract void Execute();
-
         public void Activate(double time)
         {
             _eventTime += time;
@@ -57,6 +55,7 @@ namespace WirelessNetworkComponents
             _eventTime = time;
         }
 
-       
+        public abstract void Execute();
+
     }
 }

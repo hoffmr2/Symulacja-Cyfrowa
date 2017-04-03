@@ -101,11 +101,26 @@ namespace WirelessNetworkComponents
         public void CreateNewProcess(int index)
         {
             ++_processesNumber;
-            var tmPackageProcess = new PackageProcess(_transmitters[index], OnNewProcessBron,
-                _transmissionChannel.SendFrame,  _transmissionChannel.OnFinalizePackageTransmission,
-                MainClock, _transmissionChannel, _processesNumber);
+            var constructorParams = CreatePackageDelegateInitStruct(index);
+            var tmPackageProcess = new PackageProcess(constructorParams,index,MainClock,_processesNumber);
             tmPackageProcess.Activate(Convert.ToDouble(CGPk.Next(0, 15)));
             _processes.Add(tmPackageProcess.EventTime, tmPackageProcess);
-        } 
+        }
+
+        private PackageProcessInitDelegates CreatePackageDelegateInitStruct(int index)
+        {
+            var constructorParams = new PackageProcessInitDelegates()
+            {
+                IsTransmitterBusy = _transmitters[index].IsTransmitterBusy,
+                IsChannelFree = _transmissionChannel.IsChannelFree,
+                OnFinalizePackageTransmissionChannel = _transmissionChannel.OnFinalizePackageTransmission,
+                OnFinalizePackageTransmissionTransmitter = _transmitters[index].OnFinalizePackageTransmission,
+                OnFirstPackageInQueueReady = _transmitters[index].OnFirstPackageInQueueReady,
+                OnNewProcessBornSupervisor = OnNewProcessBron,
+                OnNewProcessBornTransmitter = _transmitters[index].OnNewProcessBorn,
+                SendFrame = _transmissionChannel.SendFrame
+            };
+            return constructorParams;
+        }
     }
 }

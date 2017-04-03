@@ -15,50 +15,44 @@ namespace WirelessNetworkComponents
         public delegate void FinalizePackageTransmissionEventHandler(object sender, EventArgs e);
 
         public delegate bool IsTransmitterBusy();
-
-
         public delegate bool IsChannelFree(PackageProcess packageProcess);
         public delegate void SendFrame(PackageProcess packageProcess  );
-        public delegate void EndOfTransmission(PackageProcess packageProcess);
+
 
         public event NewProcessBornEventHandler NewProcessBorn;     
         public event FirstPackageInQueueReadyEventHandler FirstPackageInQueueReady;
         public event FinalizePackageTransmissionEventHandler FinalizePackageTransmission;
 
-      
-        public event SendFrame sendFrame;
 
-
+        private SendFrame _sendFrame;
         private IsTransmitterBusy _isTransmitterBusy;
         private IsChannelFree _isChannelFree;
 
         private readonly int _parentTransmitterIndex;
         private readonly int _id;
         private double _sendTime;
-
-    
-
         private CsmaCa _csmaCa;
         
 
-        public PackageProcess(Transmitter parenTransmitter  , NewProcessBornEventHandler onNewProcessBorn,SendFrame sendFrame, FinalizePackageTransmissionEventHandler onFinalizePackageTransmission,double globalTime, TransmissionChannel channel, int id) : base(globalTime)
+        public PackageProcess(PackageProcessInitDelegates initDelegates, int parenTransmitterIndex ,double globalTime, int id) : base(globalTime)
         {
-            //TODO: clean up and make structs for parameters
-            NewProcessBorn = parenTransmitter.OnNewProcessBorn;
-            NewProcessBorn += onNewProcessBorn;
-            FinalizePackageTransmission = parenTransmitter.OnFinalizePackageTransmission;
-            FinalizePackageTransmission += onFinalizePackageTransmission;
-            _isTransmitterBusy  = parenTransmitter.IsTransmitterBusy;
-            FirstPackageInQueueReady = parenTransmitter.OnFirstPackageInQueueReady;
-
-            _parentTransmitterIndex = parenTransmitter.Index;
-          //  createNewProcessEvent = createNewProcessEventDelegate;
-            _isChannelFree = channel.IsChannelFree;
-            this.sendFrame = sendFrame;
-
+            InitEventsAndDelegates(initDelegates);
+            _parentTransmitterIndex = parenTransmitterIndex;
             _phase = (int) Phase.Born;
             _csmaCa = new CsmaCa(0,false,CsmaCa.ContentionWindowMin,0);
             _id = id;
+        }
+
+        private void InitEventsAndDelegates(PackageProcessInitDelegates initDelegates)
+        {
+            NewProcessBorn = initDelegates.OnNewProcessBornSupervisor;
+            NewProcessBorn += initDelegates.OnNewProcessBornTransmitter;
+            FinalizePackageTransmission = initDelegates.OnFinalizePackageTransmissionChannel;
+            FinalizePackageTransmission += initDelegates.OnFinalizePackageTransmissionTransmitter;
+            _isTransmitterBusy = initDelegates.IsTransmitterBusy;
+            FirstPackageInQueueReady = initDelegates.OnFirstPackageInQueueReady;
+            _isChannelFree = initDelegates.IsChannelFree;
+            _sendFrame = initDelegates.SendFrame;
         }
 
         public enum  Phase 
@@ -147,7 +141,7 @@ namespace WirelessNetworkComponents
 
         private void TransmissionInChannel(out bool active)
         {
-            sendFrame?.Invoke(this);
+            _sendFrame?.Invoke(this);
             active = false;
             SendTime1 = EventTime;
             Activate((new Random().Next(0,10)));
