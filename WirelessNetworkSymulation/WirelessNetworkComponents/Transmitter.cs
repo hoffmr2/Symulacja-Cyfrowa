@@ -52,7 +52,10 @@ namespace WirelessNetworkComponents
         }
 
         public void OnFinalizePackageTransmission(object sender, EventArgs e)
-        { 
+        {
+            var packageProcess = sender as PackageProcess;
+            if (packageProcess != null && packageProcess.GetPhase == (int) PackageProcess.Phase.SendOrNotAck)
+                return;
            var first = _packageProcessesBuffor.Dequeue();
             if (_packageProcessesBuffor.Count != 0)
             {

@@ -102,7 +102,7 @@ namespace WirelessNetworkComponents
         {
             ++_processesNumber;
             var tmPackageProcess = new PackageProcess(_transmitters[index], OnNewProcessBron,
-                _transmissionChannel.SendFrame, _transmissionChannel.EndOfTransmission, _transmissionChannel.OnFinalizePackageTransmission,
+                _transmissionChannel.SendFrame,  _transmissionChannel.OnFinalizePackageTransmission,
                 MainClock, _transmissionChannel, _processesNumber);
             tmPackageProcess.Activate(Convert.ToDouble(CGPk.Next(0, 15)));
             _processes.Add(tmPackageProcess.EventTime, tmPackageProcess);

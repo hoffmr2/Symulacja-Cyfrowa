@@ -38,10 +38,10 @@ namespace WirelessNetworkComponents
             set { _isSleeped = value; }
         }
 
-        protected int Phase
+        public int GetPhase
         {
             get { return _phase; }
-            set { _phase = value; }
+            protected set { _phase = value; }
         }
 
         public abstract void Execute();

@@ -15,7 +15,6 @@ namespace WirelessNetworkComponents
         public delegate void FinalizePackageTransmissionEventHandler(object sender, EventArgs e);
 
         public delegate bool IsTransmitterBusy();
-        public delegate void EndofTransmissionTransmitter();
 
 
         public delegate bool IsChannelFree(PackageProcess packageProcess);
@@ -28,7 +27,7 @@ namespace WirelessNetworkComponents
 
       
         public event SendFrame sendFrame;
-        public event EndOfTransmission endOfTransmission;
+
 
         private IsTransmitterBusy _isTransmitterBusy;
         private IsChannelFree _isChannelFree;
@@ -42,10 +41,9 @@ namespace WirelessNetworkComponents
         private CsmaCa _csmaCa;
         
 
-        public PackageProcess(Transmitter parenTransmitter  , NewProcessBornEventHandler onNewProcessBorn,SendFrame sendFrame,EndOfTransmission endOfTransmission,FinalizePackageTransmissionEventHandler onFinalizePackageTransmission,double globalTime, TransmissionChannel channel, int id) : base(globalTime)
+        public PackageProcess(Transmitter parenTransmitter  , NewProcessBornEventHandler onNewProcessBorn,SendFrame sendFrame, FinalizePackageTransmissionEventHandler onFinalizePackageTransmission,double globalTime, TransmissionChannel channel, int id) : base(globalTime)
         {
-     
-
+            //TODO: clean up and make structs for parameters
             NewProcessBorn = parenTransmitter.OnNewProcessBorn;
             NewProcessBorn += onNewProcessBorn;
             FinalizePackageTransmission = parenTransmitter.OnFinalizePackageTransmission;
@@ -57,9 +55,8 @@ namespace WirelessNetworkComponents
           //  createNewProcessEvent = createNewProcessEventDelegate;
             _isChannelFree = channel.IsChannelFree;
             this.sendFrame = sendFrame;
-            this.endOfTransmission = endOfTransmission;
 
-            base.Phase = (int) Phase.Born;
+            _phase = (int) Phase.Born;
             _csmaCa = new CsmaCa(0,false,CsmaCa.ContentionWindowMin,0);
             _id = id;
         }
@@ -80,7 +77,7 @@ namespace WirelessNetworkComponents
             bool active = true;
             while (active)
             {
-                switch ((Phase) base.Phase)
+                switch ((Phase) _phase)
                 {
                     case Phase.Born:
                         BornPhaseOperations(out active);
@@ -135,7 +132,7 @@ namespace WirelessNetworkComponents
         private void PrepareForRetransmission()
         {
             IsDomaged = false;
-            base.Phase = (int) Phase.WaitingForIdleChannel;
+            _phase = (int) Phase.WaitingForIdleChannel;
             UpdateContentionWindow();
         }
 
@@ -143,9 +140,9 @@ namespace WirelessNetworkComponents
         private void SendOrNotAckOperations(out bool active)
         {
             active = false;
-            endOfTransmission?.Invoke(this);
+            OnFinalizePackageTransmission();
             Activate(CsmaCa.CitzTime);
-            base.Phase = (int) Phase.SucsessOrRetransmission;
+            _phase = (int) Phase.SucsessOrRetransmission;
         }
 
         private void TransmissionInChannel(out bool active)
@@ -154,14 +151,14 @@ namespace WirelessNetworkComponents
             active = false;
             SendTime1 = EventTime;
             Activate((new Random().Next(0,10)));
-            base.Phase = (int) Phase.SendOrNotAck;
+            _phase = (int) Phase.SendOrNotAck;
         }
 
         private void WaitingForRandomDelayTime(out bool active)
         {
             if (_csmaCa.BackoffTimer == 0)
             {
-                base.Phase = (int) Phase.TransmissionInChannel;
+                _phase = (int) Phase.TransmissionInChannel;
                 active = true;  
             }
             else 
@@ -192,7 +189,7 @@ namespace WirelessNetworkComponents
                 }
                 else
                 {
-                    base.Phase = (int) Phase.WaitingForRandomDelayTime;
+                    _phase = (int) Phase.WaitingForRandomDelayTime;
                     _csmaCa.BackoffTimer = (new Random()).Next(0, _csmaCa.ContentionWindow);
                     active = false;
                 }
@@ -212,7 +209,7 @@ namespace WirelessNetworkComponents
             if (_isTransmitterBusy?.Invoke() == false)
             {
                 active = true;
-                base.Phase = (int) Phase.WaitingForIdleChannel;
+                _phase = (int) Phase.WaitingForIdleChannel;
                 OnFirstPackageInQueueReady();
             }
             else

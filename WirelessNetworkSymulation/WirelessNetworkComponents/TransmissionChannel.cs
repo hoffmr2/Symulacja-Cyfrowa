@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,9 +87,21 @@ namespace WirelessNetworkComponents
         public void OnFinalizePackageTransmission(object sender, EventArgs e)
         {
             var packageProcess = sender as PackageProcess;
-            if (packageProcess.GetAck())
+            switch (packageProcess.GetPhase)
             {
-                Remove(packageProcess.Id);
+                case (int) PackageProcess.Phase.SucsessOrRetransmission:  
+                    if (packageProcess.GetAck())
+                    {
+                        Remove(packageProcess.Id);
+                    }
+                    break;
+                case (int) PackageProcess.Phase.SendOrNotAck:
+                    EndOfTransmission(packageProcess);
+                    break;
+                default:
+                    Debug.Assert(false);
+                    break;
+
             }
         }
 
