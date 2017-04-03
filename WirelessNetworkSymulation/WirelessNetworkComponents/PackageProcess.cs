@@ -9,31 +9,29 @@ namespace WirelessNetworkComponents
 {
     public class PackageProcess : Process
     {
-        public delegate void AddToTransmitterBufferDelegate(PackageProcess packageProcess);
-        public delegate PackageProcess GetFromTransmitterBufferDelegate();
-        public delegate bool IsTransmittingPackageDelegate();
-        public delegate void PreparePackageForTransmissionDelegate();
+        
+        public delegate void NewProcessBornEventHandler(object sender, EventArgs e);
+        public delegate void FirstPackageInQueueReadyEventHandler(object sender, EventArgs e);
+        public delegate void FinalizePackageTransmissionEventHandler(object sender, EventArgs e);
+
+        public delegate bool IsTransmitterBusy();
         public delegate void EndofTransmissionTransmitter();
 
-        public delegate void CreateNewProcessDelegate(int index);
 
-        public delegate bool IsChannelFreeDelegate(PackageProcess packageProcess);
+        public delegate bool IsChannelFree(PackageProcess packageProcess);
         public delegate void SendFrame(PackageProcess packageProcess  );
-        public delegate void RemoveFromChannel(int id);
         public delegate void EndOfTransmission(PackageProcess packageProcess);
 
-        public event AddToTransmitterBufferDelegate addToTransmitterBufferEvent;
-        public event GetFromTransmitterBufferDelegate getFromTransmitterBufferEvent;
-        public event IsTransmittingPackageDelegate isTransmittingPackageEvent;
-        public event PreparePackageForTransmissionDelegate preparePackageForTransmissionEvent;
-        public event EndofTransmissionTransmitter endOfTransmissionTransmitter;
+        public event NewProcessBornEventHandler NewProcessBorn;     
+        public event FirstPackageInQueueReadyEventHandler FirstPackageInQueueReady;
+        public event FinalizePackageTransmissionEventHandler FinalizePackageTransmission;
 
-        public event IsChannelFreeDelegate isChannelFreeEvent;
+      
         public event SendFrame sendFrame;
         public event EndOfTransmission endOfTransmission;
-        public event RemoveFromChannel removeFromChannel;
 
-        public event CreateNewProcessDelegate createNewProcessEvent;
+        private IsTransmitterBusy _isTransmitterBusy;
+        private IsChannelFree _isChannelFree;
 
         private readonly int _parentTransmitterIndex;
         private readonly int _id;
@@ -44,24 +42,24 @@ namespace WirelessNetworkComponents
         private CsmaCa _csmaCa;
         
 
-        public PackageProcess(Transmitter parenTransmitter  , CreateNewProcessDelegate createNewProcessEventDelegate,SendFrame sendFrame,EndOfTransmission endOfTransmission,RemoveFromChannel removeFromChannel,double globalTime, TransmissionChannel channel, int id) : base(globalTime)
+        public PackageProcess(Transmitter parenTransmitter  , NewProcessBornEventHandler onNewProcessBorn,SendFrame sendFrame,EndOfTransmission endOfTransmission,FinalizePackageTransmissionEventHandler onFinalizePackageTransmission,double globalTime, TransmissionChannel channel, int id) : base(globalTime)
         {
      
 
-            addToTransmitterBufferEvent = parenTransmitter.PackageProcessesBuffor.Enqueue;
-            getFromTransmitterBufferEvent = parenTransmitter.PackageProcessesBuffor.Dequeue;
-            isTransmittingPackageEvent = parenTransmitter.IsTransmitterBusy;
-            preparePackageForTransmissionEvent = parenTransmitter.PreparePackageForTransmission;
-            endOfTransmissionTransmitter = parenTransmitter.EndOfTransmission;
-            this.removeFromChannel = removeFromChannel;
+            NewProcessBorn = parenTransmitter.OnNewProcessBorn;
+            NewProcessBorn += onNewProcessBorn;
+            FinalizePackageTransmission = parenTransmitter.OnFinalizePackageTransmission;
+            FinalizePackageTransmission += onFinalizePackageTransmission;
+            _isTransmitterBusy  = parenTransmitter.IsTransmitterBusy;
+            FirstPackageInQueueReady = parenTransmitter.OnFirstPackageInQueueReady;
 
             _parentTransmitterIndex = parenTransmitter.Index;
-            createNewProcessEvent = createNewProcessEventDelegate;
-            isChannelFreeEvent = channel.IsChannelFree;
+          //  createNewProcessEvent = createNewProcessEventDelegate;
+            _isChannelFree = channel.IsChannelFree;
             this.sendFrame = sendFrame;
             this.endOfTransmission = endOfTransmission;
 
-            _phase = (int) Phase.Born;
+            base.Phase = (int) Phase.Born;
             _csmaCa = new CsmaCa(0,false,CsmaCa.ContentionWindowMin,0);
             _id = id;
         }
@@ -82,7 +80,7 @@ namespace WirelessNetworkComponents
             bool active = true;
             while (active)
             {
-                switch ((Phase) _phase)
+                switch ((Phase) base.Phase)
                 {
                     case Phase.Born:
                         BornPhaseOperations(out active);
@@ -115,34 +113,39 @@ namespace WirelessNetworkComponents
             {
                 active = false;
                 _isTerminated = true;
-                endOfTransmissionTransmitter?.Invoke();
-                removeFromChannel?.Invoke(_id);
+               OnFinalizePackageTransmission();
             }
             else
             {
                 if (_csmaCa.ContentionWindow < CsmaCa.ContentionWindowMax)
                 {
                     active = true;
-                    IsDomaged = false;
-                    _phase = (int) Phase.WaitingForIdleChannel;
-                    var newContentionWindow = 2 * (_csmaCa.ContentionWindow + 1) - 1;
-                    _csmaCa.ContentionWindow = (newContentionWindow < CsmaCa.ContentionWindowMax)? newContentionWindow : CsmaCa.ContentionWindowMax;
+                    PrepareForRetransmission();
                 }
                 else
                 {
                     active = false;
                     _isTerminated = true;
-                    endOfTransmissionTransmitter?.Invoke();
+                    OnFinalizePackageTransmission();
+                   // endOfTransmissionTransmitter?.Invoke();
                 }
             }
         }
+
+        private void PrepareForRetransmission()
+        {
+            IsDomaged = false;
+            base.Phase = (int) Phase.WaitingForIdleChannel;
+            UpdateContentionWindow();
+        }
+
 
         private void SendOrNotAckOperations(out bool active)
         {
             active = false;
             endOfTransmission?.Invoke(this);
             Activate(CsmaCa.CitzTime);
-            _phase = (int) Phase.SucsessOrRetransmission;
+            base.Phase = (int) Phase.SucsessOrRetransmission;
         }
 
         private void TransmissionInChannel(out bool active)
@@ -151,19 +154,19 @@ namespace WirelessNetworkComponents
             active = false;
             SendTime1 = EventTime;
             Activate((new Random().Next(0,10)));
-            _phase = (int) Phase.SendOrNotAck;
+            base.Phase = (int) Phase.SendOrNotAck;
         }
 
         private void WaitingForRandomDelayTime(out bool active)
         {
             if (_csmaCa.BackoffTimer == 0)
             {
-                _phase = (int) Phase.TransmissionInChannel;
+                base.Phase = (int) Phase.TransmissionInChannel;
                 active = true;  
             }
             else 
             {
-                if (isChannelFreeEvent?.Invoke(this) == true)
+                if (_isChannelFree?.Invoke(this) == true)
                 {
                     --_csmaCa.BackoffTimer;
                     active = false;
@@ -179,7 +182,7 @@ namespace WirelessNetworkComponents
 
         private void WaitingForIdleChannelPhaseOperations(out bool active)
         {
-            if (isChannelFreeEvent?.Invoke(this) == true)
+            if (_isChannelFree?.Invoke(this) == true)
             {
                 _csmaCa.DifsCounter += CsmaCa.ChannelCheckFrequency;
                 if (_csmaCa.DifsCounter < CsmaCa.DifsTime)
@@ -189,7 +192,7 @@ namespace WirelessNetworkComponents
                 }
                 else
                 {
-                    _phase = (int) Phase.WaitingForRandomDelayTime;
+                    base.Phase = (int) Phase.WaitingForRandomDelayTime;
                     _csmaCa.BackoffTimer = (new Random()).Next(0, _csmaCa.ContentionWindow);
                     active = false;
                 }
@@ -204,19 +207,48 @@ namespace WirelessNetworkComponents
 
         private void BornPhaseOperations(out bool active)
         {
-            createNewProcessEvent?.Invoke(ParentTransmitterIndex);
-            addToTransmitterBufferEvent?.Invoke(this);
-            if (isTransmittingPackageEvent?.Invoke() == false)
+            OnNewProcessBorn();
+            
+            if (_isTransmitterBusy?.Invoke() == false)
             {
                 active = true;
-                _phase = (int) Phase.WaitingForIdleChannel;
-                preparePackageForTransmissionEvent?.Invoke();
+                base.Phase = (int) Phase.WaitingForIdleChannel;
+                OnFirstPackageInQueueReady();
             }
             else
             {
                 active = false;
                 IsSleeped = true;
             }
+            
+        }
+
+        private void UpdateContentionWindow()
+        {
+            var newContentionWindow = 2 * (_csmaCa.ContentionWindow + 1) - 1;
+            _csmaCa.ContentionWindow = (newContentionWindow < CsmaCa.ContentionWindowMax)
+                ? newContentionWindow
+                : CsmaCa.ContentionWindowMax;
+        }
+
+        public bool GetAck()
+        {
+            return _csmaCa.Ack;
+        }
+
+        protected virtual void OnNewProcessBorn()
+        {
+            NewProcessBorn?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnFirstPackageInQueueReady()
+        {
+           FirstPackageInQueueReady?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnFinalizePackageTransmission()
+        {
+            FinalizePackageTransmission?.Invoke(this, EventArgs.Empty);
         }
 
         public int ParentTransmitterIndex
@@ -234,18 +266,7 @@ namespace WirelessNetworkComponents
             }
         }
 
-        public double SendTime
-        {
-            get
-            {
-                return SendTime1;
-            }
-
-            set
-            {
-                SendTime1 = value;
-            }
-        }
+   
 
         public double SendTime1
         {

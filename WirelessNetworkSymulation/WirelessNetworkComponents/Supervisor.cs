@@ -20,25 +20,7 @@ namespace WirelessNetworkComponents
         private Transmitter[] _transmitters;
         private TransmissionChannel _transmissionChannel;
         private Random CGPk;
-        public Supervisor(double simulationTime)
-        {
-            CGPk = new Random();
-            _simulationTime = simulationTime;
-            _processes = new SortedList<double, Process>(Comparer<double>.Create((x, y)  => (x > y)? 1 :-1));
-            _mainClock = 0.0;
-            _processesNumber = 0;
-            _transmissionChannel = new TransmissionChannel();
-            InitTransmitters();
-        }
 
-        private void InitTransmitters()
-        {
-            _transmitters = new Transmitter[K];
-            for (var i = 0; i < _transmitters.Length; ++i)
-            {
-                _transmitters[i] = new Transmitter(i);
-            }
-        }
 
         public double MainClock
         {
@@ -56,6 +38,26 @@ namespace WirelessNetworkComponents
             set
             {
                 _simulationTime = value;
+            }
+        }
+
+        public Supervisor(double simulationTime)
+        {
+            CGPk = new Random();
+            _simulationTime = simulationTime;
+            _processes = new SortedList<double, Process>(Comparer<double>.Create((x, y) => (x > y) ? 1 : -1));
+            _mainClock = 0.0;
+            _processesNumber = 0;
+            _transmissionChannel = new TransmissionChannel();
+            InitTransmitters();
+        }
+
+        private void InitTransmitters()
+        {
+            _transmitters = new Transmitter[K];
+            for (var i = 0; i < _transmitters.Length; ++i)
+            {
+                _transmitters[i] = new Transmitter(i);
             }
         }
 
@@ -87,12 +89,23 @@ namespace WirelessNetworkComponents
             }
         }
 
+        public void OnNewProcessBron(object sender,EventArgs e)
+        {
+            var packageProcess = sender as PackageProcess;
+            if (packageProcess != null)
+            {
+                CreateNewProcess(packageProcess.ParentTransmitterIndex);                
+            }
+        }
+
         public void CreateNewProcess(int index)
         {
             ++_processesNumber;
-            var tmPackageProcess = new PackageProcess(_transmitters[index],CreateNewProcess,_transmissionChannel.SendFrame,_transmissionChannel.EndOfTransmission,_transmissionChannel.Remove ,MainClock, _transmissionChannel,_processesNumber);
-            tmPackageProcess.Activate(Convert.ToDouble(CGPk.Next(0,15)));
-            _processes.Add(tmPackageProcess.EventTime,tmPackageProcess);
+            var tmPackageProcess = new PackageProcess(_transmitters[index], OnNewProcessBron,
+                _transmissionChannel.SendFrame, _transmissionChannel.EndOfTransmission, _transmissionChannel.OnFinalizePackageTransmission,
+                MainClock, _transmissionChannel, _processesNumber);
+            tmPackageProcess.Activate(Convert.ToDouble(CGPk.Next(0, 15)));
+            _processes.Add(tmPackageProcess.EventTime, tmPackageProcess);
         } 
     }
 }

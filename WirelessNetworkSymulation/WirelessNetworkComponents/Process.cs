@@ -35,7 +35,13 @@ namespace WirelessNetworkComponents
         public bool IsSleeped
         {
             get { return _isSleeped; }
-            protected set { _isSleeped = value; }
+            set { _isSleeped = value; }
+        }
+
+        protected int Phase
+        {
+            get { return _phase; }
+            set { _phase = value; }
         }
 
         public abstract void Execute();

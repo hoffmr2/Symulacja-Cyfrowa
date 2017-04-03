@@ -83,5 +83,14 @@ namespace WirelessNetworkComponents
             }
         }
 
+        public void OnFinalizePackageTransmission(object sender, EventArgs e)
+        {
+            var packageProcess = sender as PackageProcess;
+            if (packageProcess.GetAck())
+            {
+                Remove(packageProcess.Id);
+            }
+        }
+
     }
 }

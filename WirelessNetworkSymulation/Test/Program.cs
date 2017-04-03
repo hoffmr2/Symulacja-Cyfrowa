@@ -13,6 +13,7 @@ namespace Test
         {
             Supervisor supervisor = new Supervisor(1000);
             supervisor.SimulationLoop();
+            
         }
     }
 }

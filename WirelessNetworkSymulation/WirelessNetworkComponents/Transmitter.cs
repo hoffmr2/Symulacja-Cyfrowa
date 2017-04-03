@@ -51,8 +51,8 @@ namespace WirelessNetworkComponents
             
         }
 
-        public void EndOfTransmission()
-        {
+        public void OnFinalizePackageTransmission(object sender, EventArgs e)
+        { 
            var first = _packageProcessesBuffor.Dequeue();
             if (_packageProcessesBuffor.Count != 0)
             {
@@ -65,11 +65,20 @@ namespace WirelessNetworkComponents
             }
         }
 
-        public void PreparePackageForTransmission()
+        public void OnFirstPackageInQueueReady(object sender, EventArgs e)
         {
             IsTransmittingPackage = true;
         }
 
+        public void OnNewProcessBorn(object sender, EventArgs e)
+        {
+            var packageProcess = sender as PackageProcess;
+            if (packageProcess != null)
+            {
+                _packageProcessesBuffor.Enqueue(packageProcess);
+            
+            }
+        }
 
     }
 }
