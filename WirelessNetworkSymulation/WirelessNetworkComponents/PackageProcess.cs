@@ -39,7 +39,7 @@ namespace WirelessNetworkComponents
             InitEventsAndDelegates(initDelegates);
             _parentTransmitterIndex = parenTransmitterIndex;
             _phase = (int) Phase.Born;
-            _csmaCa = new CsmaCa(0,false,CsmaCa.ContentionWindowMin,0);
+            _csmaCa = new CsmaCa(0,false,CsmaCa.ContentionWindowMin,15);
             _id = id;
         }
 
@@ -118,7 +118,6 @@ namespace WirelessNetworkComponents
                     active = false;
                     _isTerminated = true;
                     OnFinalizePackageTransmission();
-                   // endOfTransmissionTransmitter?.Invoke();
                 }
             }
         }
