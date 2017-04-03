@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="CsmaCa.cs" />
     <Compile Include="PackageProcess.cs" />
+    <Compile Include="PackageProcessInitDelegates.cs" />
     <Compile Include="Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Supervisor.cs" />
