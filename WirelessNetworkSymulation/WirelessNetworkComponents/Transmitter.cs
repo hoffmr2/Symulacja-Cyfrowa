@@ -59,6 +59,7 @@ namespace WirelessNetworkComponents
            var first = _packageProcessesBuffor.Dequeue();
             if (_packageProcessesBuffor.Count != 0)
             {
+                //TODO correct waking process up
                 _packageProcessesBuffor.First().Wake(first.EventTime);
                 _isTransmittingPackage = false;
             }

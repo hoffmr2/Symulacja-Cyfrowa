@@ -68,16 +68,18 @@ namespace WirelessNetworkComponents
             CreateNewProcess(1);
             CreateNewProcess(2);
             CreateNewProcess(3);
+           
 
             while (_mainClock < _simulationTime)
             {
                 Debug.Assert(_processes.Count != 0);
                 var current = _processes.ElementAt(0);
                 _processes.RemoveAt(0);
+                
                 if (current.Value.IsSleeped)
                 {
-                    current.Value.Activate(_processes.Last().Key-MainClock);
-                    _processes.Add(current.Value.EventTime, current.Value);
+                    //current.Value.Activate(_processes.Last().Key-MainClock);
+                    //_processes.Add(current.Value.EventTime, current.Value);
                     continue;
                 }
                 _mainClock = current.Value.EventTime;
@@ -99,11 +101,26 @@ namespace WirelessNetworkComponents
             }
         }
 
+        void OnFinalizePackageTransmission(object sender, EventArgs e)
+        {
+            var packageProcess = sender as PackageProcess;
+            if (packageProcess != null && packageProcess.GetPhase == (int)PackageProcess.Phase.SendOrNotAck)
+                return;
+
+            var transmitterIndex = packageProcess.ParentTransmitterIndex;
+                if (_transmitters[transmitterIndex].PackageProcessesBuffor.Count != 0)
+                {
+                    var firstInTransmitterBuffer = _transmitters[transmitterIndex].PackageProcessesBuffor.First();
+                    _processes.Add(firstInTransmitterBuffer.EventTime, firstInTransmitterBuffer);
+                }
+            
+        }
+
         public void CreateNewProcess(int index)
         {
             ++_processesNumber;
             var constructorParams = CreatePackageDelegateInitStruct(index);
-            var tmPackageProcess = new PackageProcess(constructorParams,index,MainClock,_processesNumber);
+            var tmPackageProcess = new PackageProcess(constructorParams,index,MainClock,_processesNumber,true);
             tmPackageProcess.Activate(Convert.ToDouble(CGPk.Next(0, 15)));
             _processes.Add(tmPackageProcess.EventTime, tmPackageProcess);
         }
@@ -116,6 +133,7 @@ namespace WirelessNetworkComponents
                 IsChannelFree = _transmissionChannel.IsChannelFree,
                 OnFinalizePackageTransmissionChannel = _transmissionChannel.OnFinalizePackageTransmission,
                 OnFinalizePackageTransmissionTransmitter = _transmitters[index].OnFinalizePackageTransmission,
+                OnFinalizePackageTransmissionSupervisor = OnFinalizePackageTransmission,
                 OnFirstPackageInQueueReady = _transmitters[index].OnFirstPackageInQueueReady,
                 OnNewProcessBornSupervisor = OnNewProcessBron,
                 OnNewProcessBornTransmitter = _transmitters[index].OnNewProcessBorn,

@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CsmaCa.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="LoggerMessages.cs" />
     <Compile Include="PackageProcess.cs" />
     <Compile Include="PackageProcessInitDelegates.cs" />
     <Compile Include="Process.cs" />

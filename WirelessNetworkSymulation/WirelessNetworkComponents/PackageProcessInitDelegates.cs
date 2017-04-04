@@ -10,6 +10,8 @@
 
         private PackageProcess.FinalizePackageTransmissionEventHandler _onFinalizePackageTransmissionTransmitter;
 
+        private PackageProcess.FinalizePackageTransmissionEventHandler _onFinalizePackageTransmissionSupervisor;
+
         private PackageProcess.FirstPackageInQueueReadyEventHandler _onFirstPackageInQueueReady;
 
         private PackageProcess.IsChannelFree _isChannelFree;
@@ -64,6 +66,12 @@
         {
             get { return _sendFrame; }
             set { _sendFrame = value; }
+        }
+
+        public PackageProcess.FinalizePackageTransmissionEventHandler OnFinalizePackageTransmissionSupervisor
+        {
+            get { return _onFinalizePackageTransmissionSupervisor; }
+            set { _onFinalizePackageTransmissionSupervisor = value; }
         }
     }
 }
