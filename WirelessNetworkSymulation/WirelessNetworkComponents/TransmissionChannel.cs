@@ -17,6 +17,7 @@ namespace WirelessNetworkComponents
             IsFree = true;
         }
 
+        public bool IsFree { get; set; }
         public void Collision()
         {
             foreach (var packageProcess in _packageProcessesinChannel)
@@ -41,7 +42,7 @@ namespace WirelessNetworkComponents
         }
 
 
-        public bool IsFree { get; set; }
+        
 
         public bool IsChannelFree(PackageProcess packageProcess)
         {

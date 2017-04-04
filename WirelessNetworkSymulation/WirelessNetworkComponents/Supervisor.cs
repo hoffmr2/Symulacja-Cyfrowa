@@ -12,7 +12,7 @@ namespace WirelessNetworkComponents
 {
     public class Supervisor
     {
-        private const int K = 4;
+        private const int TransmittersNumber = 4; //K
         private double _mainClock;
         private double _simulationTime;
         private int _processesNumber;
@@ -21,6 +21,16 @@ namespace WirelessNetworkComponents
         private TransmissionChannel _transmissionChannel;
         private Random CGPk;
 
+        public Supervisor(double simulationTime)
+        {
+            CGPk = new Random();
+            _simulationTime = simulationTime;
+            _processes = new SortedList<double, Process>(Comparer<double>.Create((x, y) => (x > y) ? 1 : -1));
+            _mainClock = 0.0;
+            _processesNumber = 0;
+            _transmissionChannel = new TransmissionChannel();
+            InitTransmitters();
+        }
 
         public double MainClock
         {
@@ -41,20 +51,11 @@ namespace WirelessNetworkComponents
             }
         }
 
-        public Supervisor(double simulationTime)
-        {
-            CGPk = new Random();
-            _simulationTime = simulationTime;
-            _processes = new SortedList<double, Process>(Comparer<double>.Create((x, y) => (x > y) ? 1 : -1));
-            _mainClock = 0.0;
-            _processesNumber = 0;
-            _transmissionChannel = new TransmissionChannel();
-            InitTransmitters();
-        }
+    
 
         private void InitTransmitters()
         {
-            _transmitters = new Transmitter[K];
+            _transmitters = new Transmitter[TransmittersNumber];
             for (var i = 0; i < _transmitters.Length; ++i)
             {
                 _transmitters[i] = new Transmitter(i);

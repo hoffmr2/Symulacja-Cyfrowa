@@ -39,8 +39,54 @@ namespace WirelessNetworkComponents
             InitEventsAndDelegates(initDelegates);
             _parentTransmitterIndex = parenTransmitterIndex;
             _phase = (int) Phase.Born;
-            _csmaCa = new CsmaCa(0,false,CsmaCa.ContentionWindowMin,15);
+            _csmaCa = new CsmaCa(0,false,CsmaCa.ContentionWindowMin);
             _id = id;
+        }
+
+               public enum  Phase 
+        {
+            Born,
+            WaitingForIdleChannel,
+            WaitingForRandomDelayTime,
+            TransmissionInChannel,
+            SendOrNotAck,
+            SucsessOrRetransmission
+
+        }
+
+        public int ParentTransmitterIndex
+        {
+            get { return _parentTransmitterIndex; }
+        }
+
+        public bool IsDomaged { get; set; }
+
+        public int Id
+        {
+            get
+            {
+                return _id;
+            }
+        }
+
+
+
+        public double SendTime1
+        {
+            get
+            {
+                return _sendTime;
+            }
+
+            set
+            {
+                _sendTime = value;
+            }
+        }
+
+        public void SetAckFlag()
+        {
+            _csmaCa.Ack = true;
         }
 
         private void InitEventsAndDelegates(PackageProcessInitDelegates initDelegates)
@@ -55,16 +101,7 @@ namespace WirelessNetworkComponents
             _sendFrame = initDelegates.SendFrame;
         }
 
-        public enum  Phase 
-        {
-            Born,
-            WaitingForIdleChannel,
-            WaitingForRandomDelayTime,
-            TransmissionInChannel,
-            SendOrNotAck,
-            SucsessOrRetransmission
-
-        }
+ 
 
         public override void Execute()
         {
@@ -241,39 +278,6 @@ namespace WirelessNetworkComponents
             FinalizePackageTransmission?.Invoke(this, EventArgs.Empty);
         }
 
-        public int ParentTransmitterIndex
-        {
-            get { return _parentTransmitterIndex; }
-        }
-
-        public bool IsDomaged { get; set; }
-
-        public int Id
-        {
-            get
-            {
-                return _id;
-            }
-        }
-
-   
-
-        public double SendTime1
-        {
-            get
-            {
-                return _sendTime;
-            }
-
-            set
-            {
-                _sendTime = value;
-            }
-        }
-
-        public void SetAckFlag()
-        {
-            _csmaCa.Ack = true;
-        }
+       
     }
 }
