@@ -221,6 +221,7 @@ namespace WirelessNetworkComponents
                 {
                     _phase = (int) Phase.WaitingForRandomDelayTime;
                     _csmaCa.BackoffTimer = (new Random()).Next(0, _csmaCa.ContentionWindow);
+                    Activate(CsmaCa.ChannelCheckFrequency);
                     active = false;
                 }
             }
