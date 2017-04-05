@@ -11,7 +11,7 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            Supervisor supervisor = new Supervisor(100);
+            Supervisor supervisor = new Supervisor(5000);
             supervisor.SimulationLoop();
             
         }

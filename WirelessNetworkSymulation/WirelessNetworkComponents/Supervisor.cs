@@ -121,7 +121,7 @@ namespace WirelessNetworkComponents
             ++_processesNumber;
             var constructorParams = CreatePackageDelegateInitStruct(index);
             var tmPackageProcess = new PackageProcess(constructorParams,index,MainClock,_processesNumber,true);
-            tmPackageProcess.Activate(Convert.ToDouble(CGPk.Next(0, 15)));
+            tmPackageProcess.Activate(Convert.ToDouble(CGPk.Next(0, 10))/10);
             _processes.Add(tmPackageProcess.EventTime, tmPackageProcess);
         }
 

@@ -34,11 +34,12 @@ namespace WirelessNetworkComponents
         private CsmaCa _csmaCa;
         private static Logger _logger;
         private bool _enableLogger;
-        private Random _random;
+        private static Random _random;
 
         static PackageProcess()
         {
             _logger = new Logger("Logger.txt");
+            _random = new Random();
         }
         public PackageProcess(PackageProcessInitDelegates initDelegates, int parenTransmitterIndex ,double globalTime, int id, bool enableLogger = false) : base(globalTime)
         {
@@ -48,7 +49,7 @@ namespace WirelessNetworkComponents
             _csmaCa = new CsmaCa(0,false,CsmaCa.ContentionWindowMin);
             _id = id;
             _enableLogger = enableLogger;
-            _random = new Random();
+           
 
         }
 
@@ -198,9 +199,9 @@ namespace WirelessNetworkComponents
         {
             if (_enableLogger)
                 _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime + LoggerMessages.PackageId + _id + LoggerMessages.TransmissionInChannelPhase);
-            _sendFrame?.Invoke(this);
-            active = false;
             SendTime1 = EventTime;
+            _sendFrame?.Invoke(this);
+            active = false;           
             Activate(_random.Next(0,10));
             _phase = (int) Phase.SendOrNotAck;
         }
@@ -209,25 +210,23 @@ namespace WirelessNetworkComponents
         {
             if (_enableLogger)
                 _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime + LoggerMessages.PackageId + _id + LoggerMessages.WaitingForRandomDelayPhase);
+
+            if (_isChannelFree?.Invoke(this) == true && _csmaCa.BackoffTimer != 0)
+            {
+                --_csmaCa.BackoffTimer;
+            }
+
             if (_csmaCa.BackoffTimer == 0)
             {
-                _phase = (int) Phase.TransmissionInChannel;
-                active = true;  
+                _phase = (int)Phase.TransmissionInChannel;
+                active = true;
             }
-            else 
+            else
             {
-                if (_isChannelFree?.Invoke(this) == true)
-                {
-                    --_csmaCa.BackoffTimer;
-                    active = false;
-                    Activate(CsmaCa.ChannelCheckFrequency);
-                }
-                else
-                {
-                    active = false;
-                    Activate(CsmaCa.ChannelCheckFrequency);
-                }
+                active = false;
+                Activate(CsmaCa.ChannelCheckFrequency);
             }
+
         }
 
         private void WaitingForIdleChannelPhaseOperations(out bool active)
@@ -274,6 +273,7 @@ namespace WirelessNetworkComponents
             {
                 active = false;
                 IsSleeped = true;
+                _phase = (int)Phase.WaitingForIdleChannel;
             }
             
         }

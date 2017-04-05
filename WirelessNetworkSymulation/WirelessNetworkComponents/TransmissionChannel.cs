@@ -53,7 +53,8 @@ namespace WirelessNetworkComponents
             {
                 foreach (var process in _packageProcessesinChannel)
                 {
-                    if (packageProcess.SendTime1 != process.SendTime1)
+                    var ans = Math.Abs(Math.Floor(packageProcess.EventTime * 10) - Math.Floor(process.SendTime1 * 10));
+                    if (ans >= 1.0)
                         return false;
                 }
                 return true;
@@ -65,6 +66,7 @@ namespace WirelessNetworkComponents
             _packageProcessesinChannel.Add(packageProcess);
             if (IsFree)
             {
+                
                 IsFree = false;
             }
             else
