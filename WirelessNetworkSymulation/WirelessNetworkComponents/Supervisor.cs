@@ -13,32 +13,32 @@ namespace WirelessNetworkComponents
     public class Supervisor
     {
         private const int TransmittersNumber = 4; //K
-        private double _mainClock;
-        private double _simulationTime;
+        private int _mainClock; //time 10*ms
+        private int _simulationTime;
         private int _processesNumber;
-        private SortedList<double,Process> _processes;
+        private SortedList<int,Process> _processes;
         private Transmitter[] _transmitters;
         private TransmissionChannel _transmissionChannel;
         private Random CGPk;
 
-        public Supervisor(double simulationTime)
+        public Supervisor(int simulationTime)
         {
             CGPk = new Random();
             _simulationTime = simulationTime;
-            _processes = new SortedList<double, Process>(Comparer<double>.Create((x, y) => (x > y) ? 1 : -1));
-            _mainClock = 0.0;
+            _processes = new SortedList<int, Process>(Comparer<int>.Create((x, y) => (x > y) ? 1 : -1));
+            _mainClock = 0;
             _processesNumber = 0;
             _transmissionChannel = new TransmissionChannel();
             InitTransmitters();
         }
 
-        public double MainClock
+        public int MainClock
         {
             get { return _mainClock; }
             set { _mainClock = value; }
         }
 
-        public double SimulationTime
+        public int SimulationTime
         {
             get
             {
@@ -121,7 +121,7 @@ namespace WirelessNetworkComponents
             ++_processesNumber;
             var constructorParams = CreatePackageDelegateInitStruct(index);
             var tmPackageProcess = new PackageProcess(constructorParams,index,MainClock,_processesNumber,true);
-            tmPackageProcess.Activate(Convert.ToDouble(CGPk.Next(0, 10))/10);
+            tmPackageProcess.Activate(CGPk.Next(0, 5));
             _processes.Add(tmPackageProcess.EventTime, tmPackageProcess);
         }
 

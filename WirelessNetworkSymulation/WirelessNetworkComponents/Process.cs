@@ -10,19 +10,19 @@ namespace WirelessNetworkComponents
  
     public abstract class Process
     {
-        protected double _eventTime;
+        protected int _eventTime;
         protected int _phase;
         protected bool _isTerminated;
         protected bool _isSleeped;
 
-        protected Process(double globalTime )
+        protected Process(int globalTime )
         {
             _eventTime = globalTime;
             _isTerminated = false;
             _isSleeped = false;
         }
 
-        public double EventTime
+        public int EventTime
         {
             get { return _eventTime; }
         }
@@ -44,12 +44,12 @@ namespace WirelessNetworkComponents
             protected set { _phase = value; }
         }
 
-        public void Activate(double time)
+        public void Activate(int time)
         {
             _eventTime += time;
         }
 
-        public void Wake(double time)
+        public void Wake(int time)
         {
             _isSleeped = false;
             _eventTime = time;

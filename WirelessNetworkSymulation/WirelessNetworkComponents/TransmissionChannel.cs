@@ -11,13 +11,20 @@ namespace WirelessNetworkComponents
     {
         private List<PackageProcess> _packageProcessesinChannel;
 
+        private bool _isFree;
+
         public TransmissionChannel()
         {
             _packageProcessesinChannel = new List<PackageProcess>();
             IsFree = true;
         }
 
-        public bool IsFree { get; set; }
+        public bool IsFree
+        {
+            get { return _isFree; }
+            set { _isFree = value; }
+        }
+
         public void Collision()
         {
             foreach (var packageProcess in _packageProcessesinChannel)
@@ -49,22 +56,23 @@ namespace WirelessNetworkComponents
 
             if (IsFree)
                 return true;
-            else
-            {
-                foreach (var process in _packageProcessesinChannel)
-                {
-                    var ans = Math.Abs(Math.Floor(packageProcess.EventTime * 10) - Math.Floor(process.SendTime1 * 10));
-                    if (ans >= 1.0)
-                        return false;
-                }
-                return true;
-            }
+          
+             else
+             {
+                 foreach (var process in _packageProcessesinChannel)
+                 {
+                    
+                     if (packageProcess.EventTime != process.SendTime1)
+                         return false;
+                 }
+                 return true;
+             }
         }
 
         public void SendFrame(PackageProcess packageProcess)
         {
             _packageProcessesinChannel.Add(packageProcess);
-            if (IsFree)
+            if (IsFree == true)
             {
                 
                 IsFree = false;

@@ -2,13 +2,14 @@
 {
     public struct CsmaCa
     {
-        public const double DifsTime = 2;
-        public const double ChannelCheckFrequency = 0.5;
+        //all tuime atributes 10x larger
+        public const int DifsTime = 20;
+        public const int ChannelCheckFrequency = 5;
         public const int ContentionWindowMin = 15;
         public const int ContentionWindowMax = 127;
-        public const double CitzTime = 1;
+        public const int CitzTime = 10;
 
-        public double DifsCounter { get; set; }
+        public int DifsCounter { get; set; }
 
         public bool Ack { get; set; }
 
