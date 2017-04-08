@@ -12,17 +12,31 @@ namespace WirelessNetworkComponents
         private List<PackageProcess> _packageProcessesinChannel;
 
         private bool _isFree;
+        private int _numberOdTransmissions;
+        private int _numberOfFailedTransmissions;
 
         public TransmissionChannel()
         {
             _packageProcessesinChannel = new List<PackageProcess>();
             IsFree = true;
+            _numberOdTransmissions = 0;
+            _numberOfFailedTransmissions = 0;
         }
 
         public bool IsFree
         {
             get { return _isFree; }
             set { _isFree = value; }
+        }
+
+        public int NumberOdTransmissions
+        {
+            get { return _numberOdTransmissions; }
+        }
+
+        public int NumberOfFailedTransmissions
+        {
+            get { return _numberOfFailedTransmissions; }
         }
 
         public void Collision()
@@ -57,8 +71,6 @@ namespace WirelessNetworkComponents
             if (IsFree)
                 return true;
           
-             else
-             {
                  foreach (var process in _packageProcessesinChannel)
                  {
                     
@@ -66,11 +78,11 @@ namespace WirelessNetworkComponents
                          return false;
                  }
                  return true;
-             }
         }
 
         public void SendFrame(PackageProcess packageProcess)
         {
+            ++_numberOdTransmissions;
             _packageProcessesinChannel.Add(packageProcess);
             if (IsFree == true)
             {
@@ -87,6 +99,7 @@ namespace WirelessNetworkComponents
         {
             if (packageProcess.IsDomaged)
             {
+                ++_numberOfFailedTransmissions;
                 Remove(packageProcess.Id);
             }
             else

@@ -50,6 +50,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RandomGenerators\RandomGenerators.vcxproj">
+      <Project>{28279c18-8855-41e3-a3d7-c7b50791075e}</Project>
+      <Name>RandomGenerators</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WirelessNetworkComponents\WirelessNetworkComponents.csproj">
       <Project>{b5b3666d-f97b-4b76-9b6e-21f03cb2410c}</Project>
       <Name>WirelessNetworkComponents</Name>

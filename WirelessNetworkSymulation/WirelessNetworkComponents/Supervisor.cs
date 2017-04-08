@@ -5,31 +5,35 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.Remoting.Messaging;
 using System.Xml.Linq;
+using RandomGenerators;
 
 namespace WirelessNetworkComponents
 {
     public class Supervisor
     {
-        private const int TransmittersNumber = 4; //K
+        private const int TransmittersNumber = 4; //K = 4
         private int _mainClock; //time 10*ms
         private int _simulationTime;
         private int _processesNumber;
+        private Logger _logger;
         private SortedList<int,Process> _processes;
         private Transmitter[] _transmitters;
         private TransmissionChannel _transmissionChannel;
-        private Random CGPk;
+        private SimulationRandomGenerators _simulationRandomGenerators;
 
-        public Supervisor(int simulationTime)
+        public Supervisor(int simulationTime,int seedSet,bool enableLogger,double lambda)
         {
-            CGPk = new Random();
+            _logger = new Logger("Logger.txt",enableLogger);
             _simulationTime = simulationTime;
             _processes = new SortedList<int, Process>(Comparer<int>.Create((x, y) => (x > y) ? 1 : -1));
             _mainClock = 0;
             _processesNumber = 0;
             _transmissionChannel = new TransmissionChannel();
             InitTransmitters();
+            InitGenerators(seedSet,lambda);
         }
 
         public int MainClock
@@ -51,7 +55,28 @@ namespace WirelessNetworkComponents
             }
         }
 
-    
+
+        private void InitGenerators(int seedSet,double lambda)
+        {
+            var file = new StreamReader("seeds.txt");
+            var line = file.ReadToEnd();
+            var lines = line.Split('\n');
+            var expectedLine = lines[seedSet];
+            var seeds = expectedLine.Split(':');
+
+            try
+            {
+                _simulationRandomGenerators.BackofftimerValue = new UniformRandomGenerator(int.Parse(seeds[0]));
+                _simulationRandomGenerators.GenerationTime = new ExponentialRandomGenerator(lambda,int.Parse(seeds[1]));
+                _simulationRandomGenerators.TransmissionTime = new UniformRandomGenerator(int.Parse(seeds[2]));
+
+            }
+            catch 
+            {
+                throw new Exception("Error initialising random Generators");
+            }
+
+        }
 
         private void InitTransmitters()
         {
@@ -88,8 +113,11 @@ namespace WirelessNetworkComponents
                 {
                     _processes.Add(current.Value.EventTime, current.Value);
                 }
-            
+                
             }
+            LogSimulationResults();
+            System.Threading.Thread.Sleep(500);
+
         }
 
         public void OnNewProcessBron(object sender,EventArgs e)
@@ -120,8 +148,8 @@ namespace WirelessNetworkComponents
         {
             ++_processesNumber;
             var constructorParams = CreatePackageDelegateInitStruct(index);
-            var tmPackageProcess = new PackageProcess(constructorParams,index,MainClock,_processesNumber,true);
-            tmPackageProcess.Activate(CGPk.Next(0, 5));
+            var tmPackageProcess = new PackageProcess(constructorParams,index,MainClock,_processesNumber);
+            tmPackageProcess.Activate((int)_simulationRandomGenerators.GenerationTime.Rand());
             _processes.Add(tmPackageProcess.EventTime, tmPackageProcess);
         }
 
@@ -137,9 +165,18 @@ namespace WirelessNetworkComponents
                 OnFirstPackageInQueueReady = _transmitters[index].OnFirstPackageInQueueReady,
                 OnNewProcessBornSupervisor = OnNewProcessBron,
                 OnNewProcessBornTransmitter = _transmitters[index].OnNewProcessBorn,
-                SendFrame = _transmissionChannel.SendFrame
+                SendFrame = _transmissionChannel.SendFrame,
+                DrawBackoffTimer = _simulationRandomGenerators.BackofftimerValue.Rand,
+                DrawTransmissionTime = _simulationRandomGenerators.TransmissionTime.Rand,
+                LoggerWrite = _logger.LoggerWrite
             };
             return constructorParams;
+        }
+
+        public void LogSimulationResults()
+        {
+            _logger.LoggerForceWrite("number of transmissions: " + _transmissionChannel.NumberOdTransmissions );
+            _logger.LoggerForceWrite("number of failed transmissions: " + _transmissionChannel.NumberOfFailedTransmissions);
         }
     }
 }

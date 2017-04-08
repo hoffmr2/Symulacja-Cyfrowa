@@ -47,9 +47,16 @@
     <Compile Include="PackageProcessInitDelegates.cs" />
     <Compile Include="Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimulationRandomGenerators.cs" />
     <Compile Include="Supervisor.cs" />
     <Compile Include="TransmissionChannel.cs" />
     <Compile Include="Transmitter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RandomGenerators\RandomGenerators.vcxproj">
+      <Project>{28279c18-8855-41e3-a3d7-c7b50791075e}</Project>
+      <Name>RandomGenerators</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

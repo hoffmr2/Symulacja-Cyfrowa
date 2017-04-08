@@ -20,6 +20,12 @@
 
         private PackageProcess.SendFrame _sendFrame;
 
+        private PackageProcess.DrawBackoffTimer _drawBackoffTimer;
+
+        private PackageProcess.DrawTransmissionTime _drawTransmissionTime;
+
+        private PackageProcess.LoggerWrite _loggerWrite;
+
         public PackageProcess.NewProcessBornEventHandler OnNewProcessBornTransmitter
         {
             get { return _onNewProcessBornTransmitter; }
@@ -72,6 +78,24 @@
         {
             get { return _onFinalizePackageTransmissionSupervisor; }
             set { _onFinalizePackageTransmissionSupervisor = value; }
+        }
+
+        public PackageProcess.DrawBackoffTimer DrawBackoffTimer
+        {
+            get { return _drawBackoffTimer; }
+            set { _drawBackoffTimer = value; }
+        }
+
+        public PackageProcess.DrawTransmissionTime DrawTransmissionTime
+        {
+            get { return _drawTransmissionTime; }
+            set { _drawTransmissionTime = value; }
+        }
+
+        public PackageProcess.LoggerWrite LoggerWrite
+        {
+            get { return _loggerWrite; }
+            set { _loggerWrite = value; }
         }
     }
 }
