@@ -30,7 +30,7 @@ namespace WirelessNetworkComponents
 
         private readonly int _parentTransmitterIndex;
         private readonly int _id;
-        private double _sendTime;
+        private int _sendTime;
         private CsmaCa _csmaCa;
         private static Logger _logger;
         private bool _enableLogger;
@@ -41,7 +41,7 @@ namespace WirelessNetworkComponents
             _logger = new Logger("Logger.txt");
             _random = new Random();
         }
-        public PackageProcess(PackageProcessInitDelegates initDelegates, int parenTransmitterIndex ,double globalTime, int id, bool enableLogger = false) : base(globalTime)
+        public PackageProcess(PackageProcessInitDelegates initDelegates, int parenTransmitterIndex ,int globalTime, int id, bool enableLogger = false) : base(globalTime)
         {
             InitEventsAndDelegates(initDelegates);
             _parentTransmitterIndex = parenTransmitterIndex;
@@ -81,7 +81,7 @@ namespace WirelessNetworkComponents
 
 
 
-        public double SendTime1
+        public int SendTime1
         {
             get
             {
@@ -150,8 +150,7 @@ namespace WirelessNetworkComponents
         {
             if (_csmaCa.Ack)
             {
-                if (_enableLogger)
-                    _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime + LoggerMessages.PackageId + _id + LoggerMessages.CorrectTransmissionPhase);
+                LogWrite(LoggerMessages.CorrectTransmissionPhase);
                 active = false;
                 _isTerminated = true;
                OnFinalizePackageTransmission();
@@ -160,15 +159,13 @@ namespace WirelessNetworkComponents
             {
                 if (_csmaCa.ContentionWindow < CsmaCa.ContentionWindowMax)
                 {
-                    if (_enableLogger)
-                        _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime + LoggerMessages.PackageId + _id + LoggerMessages.RetransmissionPhase);
+                    LogWrite(LoggerMessages.RetransmissionPhase);
                     active = true;
                     PrepareForRetransmission();
                 }
                 else
                 {
-                    if (_enableLogger)
-                        _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime + LoggerMessages.PackageId + _id + LoggerMessages.AbortTransmissionPhase);
+                    LogWrite(LoggerMessages.AbortTransmissionPhase);
                     active = false;
                     _isTerminated = true;
                     OnFinalizePackageTransmission();
@@ -187,8 +184,7 @@ namespace WirelessNetworkComponents
 
         private void SendOrNotAckOperations(out bool active)
         {
-            if (_enableLogger)
-                _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime + LoggerMessages.PackageId + _id + LoggerMessages.SendOrNotAckPhase);
+            LogWrite(LoggerMessages.SendOrNotAckPhase);
             active = false;
             OnFinalizePackageTransmission();
             Activate(CsmaCa.CitzTime);
@@ -197,29 +193,31 @@ namespace WirelessNetworkComponents
 
         private void TransmissionInChannel(out bool active)
         {
-            if (_enableLogger)
-                _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime + LoggerMessages.PackageId + _id + LoggerMessages.TransmissionInChannelPhase);
             SendTime1 = EventTime;
+            LogWrite(LoggerMessages.TransmissionInChannelPhase + " Send time: " + SendTime1);
+            
             _sendFrame?.Invoke(this);
             active = false;           
-            Activate(_random.Next(0,10));
+            Activate(_random.Next(0,100));
             _phase = (int) Phase.SendOrNotAck;
         }
 
         private void WaitingForRandomDelayTime(out bool active)
         {
-            if (_enableLogger)
-                _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime + LoggerMessages.PackageId + _id + LoggerMessages.WaitingForRandomDelayPhase);
-
-            if (_isChannelFree?.Invoke(this) == true && _csmaCa.BackoffTimer != 0)
+            LogWrite(LoggerMessages.WaitingForRandomDelayPhase);
+            if(_isChannelFree?.Invoke(this) == true)
             {
-                --_csmaCa.BackoffTimer;
-            }
-
-            if (_csmaCa.BackoffTimer == 0)
-            {
-                _phase = (int)Phase.TransmissionInChannel;
-                active = true;
+                if (_csmaCa.BackoffTimer == 0)
+                {
+                    _phase = (int)Phase.TransmissionInChannel;
+                    active = true;
+                }
+                else
+                {
+                    --_csmaCa.BackoffTimer;
+                    active = false;
+                    Activate(CsmaCa.ChannelCheckFrequency);
+                }
             }
             else
             {
@@ -227,12 +225,13 @@ namespace WirelessNetworkComponents
                 Activate(CsmaCa.ChannelCheckFrequency);
             }
 
+         
+
         }
 
         private void WaitingForIdleChannelPhaseOperations(out bool active)
         {
-            if (_enableLogger)
-                _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime + LoggerMessages.PackageId + _id + LoggerMessages.WaitingForIdleChannelPhase);
+            LogWrite(LoggerMessages.WaitingForIdleChannelPhase);
             if (_isChannelFree?.Invoke(this) == true)
             {
                 _csmaCa.DifsCounter += CsmaCa.ChannelCheckFrequency;
@@ -245,6 +244,10 @@ namespace WirelessNetworkComponents
                 {
                     _phase = (int) Phase.WaitingForRandomDelayTime;
                     _csmaCa.BackoffTimer = _random.Next(0, _csmaCa.ContentionWindow);
+                    //debug help
+                    if(_csmaCa.BackoffTimer ==0)
+                        LogWrite("backoff timer wylosowany 0");
+
                     Activate(CsmaCa.ChannelCheckFrequency);
                     active = false;
                 }
@@ -260,8 +263,7 @@ namespace WirelessNetworkComponents
         private void BornPhaseOperations(out bool active)
         {
             OnNewProcessBorn();
-            if(_enableLogger)
-                _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime + LoggerMessages.PackageId + _id + LoggerMessages.BronPhase);
+           LogWrite(LoggerMessages.BronPhase);
             
             if (_isTransmitterBusy?.Invoke() == false)
             {
@@ -284,6 +286,12 @@ namespace WirelessNetworkComponents
             _csmaCa.ContentionWindow = (newContentionWindow < CsmaCa.ContentionWindowMax)
                 ? newContentionWindow
                 : CsmaCa.ContentionWindowMax;
+        }
+
+        public void LogWrite(string text)
+        {
+            if (_enableLogger)
+                _logger.LoggerWrite(LoggerMessages.PackageEvenTime + EventTime/10.0 + LoggerMessages.PackageId + _id + text);
         }
 
         public bool GetAck()
