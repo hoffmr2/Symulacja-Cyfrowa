@@ -223,7 +223,6 @@ namespace WirelessNetworkComponents
             {
                 active = false;
                 Activate(CsmaCa.ChannelCheckFrequency);
-               // return;
             }
 
          
