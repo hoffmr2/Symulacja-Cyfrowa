@@ -1,24 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+
 using RandomGenerators;
 using WirelessNetworkComponents;
+
+using log4net;
+using log4net.Config;
+using log4net.Filter;
+using log4net.Repository;
 
 namespace Test
 {
     class Program
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
         static void Main(string[] args)
         {
-           // GenerateSeeds();
+          
 
+        XmlConfigurator.Configure(new FileInfo(ConfigurationSettings.AppSettings["log4net-config-file"]));           // BasicConfigurator.Configure();
 
-            Supervisor supervisor = new Supervisor(150000,10,false,2);
-            supervisor.SimulationLoop();
+            Supervisor supervisor = new Supervisor(4);
+            supervisor.Run(10000, 0, 2.3);
         }
 
         private static void GenerateSeeds()

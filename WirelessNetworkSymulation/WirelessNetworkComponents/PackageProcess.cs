@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 
 namespace WirelessNetworkComponents
 {
@@ -11,7 +12,7 @@ namespace WirelessNetworkComponents
     {
         private const int MinTransmissionTime = 10;
         private const int MaxTransmissionTime = 100;
-           
+        private static readonly ILog log = LogManager.GetLogger(typeof(PackageProcess));
         public delegate void NewProcessBornEventHandler(object sender, EventArgs e);
         public delegate void FirstPackageInQueueReadyEventHandler(object sender, EventArgs e);
         public delegate void FinalizePackageTransmissionEventHandler(object sender, EventArgs e);
@@ -33,7 +34,6 @@ namespace WirelessNetworkComponents
         private IsChannelFree _isChannelFree;
         private DrawBackoffTimer _drawBackoffTimer;
         private DrawTransmissionTime _drawTransmissionTime;
-        private LoggerWrite _loggerWrite;
 
 
         private readonly int _parentTransmitterIndex;
@@ -92,16 +92,17 @@ namespace WirelessNetworkComponents
             }
         }
 
-        public void SetAckFlag()
+        public void SetAckFlag(bool value)
         {
-            _csmaCa.Ack = true;
+            _csmaCa.Ack = value;
         }
 
         private void InitEventsAndDelegates(PackageProcessInitDelegates initDelegates)
         {
             NewProcessBorn = initDelegates.OnNewProcessBornSupervisor;
             NewProcessBorn += initDelegates.OnNewProcessBornTransmitter;
-            FinalizePackageTransmission = initDelegates.OnFinalizePackageTransmissionChannel;
+            FinalizePackageTransmission += initDelegates.OnFinalizePackageReceiever;
+            FinalizePackageTransmission += initDelegates.OnFinalizePackageTransmissionChannel;
             FinalizePackageTransmission += initDelegates.OnFinalizePackageTransmissionTransmitter;
             FinalizePackageTransmission += initDelegates.OnFinalizePackageTransmissionSupervisor;
             _isTransmitterBusy = initDelegates.IsTransmitterBusy;
@@ -110,7 +111,6 @@ namespace WirelessNetworkComponents
             _sendFrame = initDelegates.SendFrame;
             _drawBackoffTimer = initDelegates.DrawBackoffTimer;
             _drawTransmissionTime = initDelegates.DrawTransmissionTime;
-            _loggerWrite = initDelegates.LoggerWrite;
         }
 
  
@@ -305,7 +305,8 @@ namespace WirelessNetworkComponents
         public void LogWrite(string text)
         {
 
-                _loggerWrite(LoggerMessages.PackageEvenTime + EventTime/10.0 + LoggerMessages.PackageId + _id + text);
+              //  _loggerWrite(LoggerMessages.PackageEvenTime + EventTime/10.0 + LoggerMessages.PackageId + _id + text);
+              log.Info(LoggerMessages.PackageEvenTime + EventTime / 10.0 + LoggerMessages.PackageId + _id + text);
         }
 
         public bool GetAck()

@@ -44,6 +44,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WirelessNetworkController.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WirelessNetworkSymulationModel\WirelessNetworkSimulationModel.csproj">
+      <Project>{68e993ae-89a8-4bd0-86f0-d5d356569381}</Project>
+      <Name>WirelessNetworkSimulationModel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

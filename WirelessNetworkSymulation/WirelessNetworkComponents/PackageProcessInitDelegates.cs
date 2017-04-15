@@ -6,6 +6,8 @@
 
         private PackageProcess.NewProcessBornEventHandler _onNewProcessBornSupervisor;
 
+        private PackageProcess.FinalizePackageTransmissionEventHandler _onFinalizePackageReceiever;
+
         private PackageProcess.FinalizePackageTransmissionEventHandler _onFinalizePackageTransmissionChannel;
 
         private PackageProcess.FinalizePackageTransmissionEventHandler _onFinalizePackageTransmissionTransmitter;
@@ -24,7 +26,6 @@
 
         private PackageProcess.DrawTransmissionTime _drawTransmissionTime;
 
-        private PackageProcess.LoggerWrite _loggerWrite;
 
         public PackageProcess.NewProcessBornEventHandler OnNewProcessBornTransmitter
         {
@@ -92,10 +93,10 @@
             set { _drawTransmissionTime = value; }
         }
 
-        public PackageProcess.LoggerWrite LoggerWrite
+        public PackageProcess.FinalizePackageTransmissionEventHandler OnFinalizePackageReceiever
         {
-            get { return _loggerWrite; }
-            set { _loggerWrite = value; }
+            get { return _onFinalizePackageReceiever; }
+            set { _onFinalizePackageReceiever = value; }
         }
     }
 }

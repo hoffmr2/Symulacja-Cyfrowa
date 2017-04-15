@@ -51,6 +51,11 @@ namespace WirelessNetworkComponents
             
         }
 
+        public void Reset()
+        {
+            _packageProcessesBuffor.Clear();
+            _isTransmittingPackage = false;
+        }
         public void OnFinalizePackageTransmission(object sender, EventArgs e)
         {
             var packageProcess = sender as PackageProcess;
