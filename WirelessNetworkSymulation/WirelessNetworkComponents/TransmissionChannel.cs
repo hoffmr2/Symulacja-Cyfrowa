@@ -118,8 +118,7 @@ namespace WirelessNetworkComponents
                 ++_succesTransmissions;
             }
             _totalTransmissions = _failedTransmissions + _succesTransmissions;
-            _times.Add(packageProcess.EventTime);
-            _means.Add(ErrorMean);
+          
         }
 
         public void OnFinalizePackageTransmission(object sender, EventArgs e)

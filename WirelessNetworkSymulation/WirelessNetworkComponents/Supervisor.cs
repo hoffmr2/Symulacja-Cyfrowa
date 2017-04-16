@@ -144,7 +144,16 @@ namespace WirelessNetworkComponents
 
             while (_mainClock < _simulationTime)
             {
-                
+                if (_mainClock % 10 == 0)
+                {
+                    if (_worker != null)
+                    {
+                        _worker.ReportProgress((int)((float)_mainClock / (float)SimulationTime * 100));
+
+                    }
+                    _transmissionChannel.Times.Add(_mainClock);
+                    _transmissionChannel.Means.Add(_transmissionChannel.ErrorMean);
+                }
                 Debug.Assert(_processes.Count != 0);
                 var current = _processes.ElementAt(0);
                 _processes.RemoveAt(0);
@@ -161,11 +170,10 @@ namespace WirelessNetworkComponents
                 {
                     _processes.Add(current.Value.EventTime, current.Value);
                 }
-                _worker.ReportProgress((int)((float)_mainClock / (float)SimulationTime * 100));
-
+             
             }
             LogSimulationResults();
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(50);
 
         }
 

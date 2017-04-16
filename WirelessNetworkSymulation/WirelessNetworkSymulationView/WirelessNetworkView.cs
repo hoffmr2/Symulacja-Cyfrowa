@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WirelessNetworkSymulationController;
@@ -14,6 +15,7 @@ namespace WirelessNetworkSymulationView
     public partial class SimulationView : Form, IWirelessNetworkView
     {
         private WirelessNetworkController _wirelessNetworkController;
+        private Thread t;
         public SimulationView()
         {
             InitializeComponent();
@@ -42,6 +44,24 @@ namespace WirelessNetworkSymulationView
         {
             return backgroundWorkerSimulationLoop;
         }
+
+        public void DisableControls()
+        {
+
+            textBoxSimulationTime.Enabled = false;
+            textBoxLambda.Enabled = false;
+            textBoxSeedSet.Enabled = false;
+            buttonRun.Enabled = false;
+        }
+
+        public void EnableControls()
+        {
+            textBoxSimulationTime.Enabled = true;
+            textBoxLambda.Enabled = true;
+            textBoxSeedSet.Enabled = true;
+            buttonRun.Enabled = true;
+        }
+
         #endregion
 
         private void textBoxSimulationTime_TextChanged(object sender, EventArgs e)
@@ -61,30 +81,22 @@ namespace WirelessNetworkSymulationView
 
         private void buttonRun_Click(object sender, EventArgs e)
         {
-            progressBarSimulationLoop.Show();
+            DisableControls();  
             backgroundWorkerSimulationLoop.RunWorkerAsync();
         }
 
         private void buttonPlot_Click(object sender, EventArgs e)
         {
-            _wirelessNetworkController.Plot();
+           // _wirelessNetworkController.Plot();
         }
 
         private void backgroundWorkerSimulationLoop_DoWork(object sender, DoWorkEventArgs e)
         {
-            DisableControls();
-
             _wirelessNetworkController.Run();
+
         }
 
-        private void DisableControls()
-        {
-          
-                textBoxSimulationTime.Enabled = false;
-                textBoxLambda.Enabled = false;
-                textBoxSeedSet.Enabled = false;
-                buttonRun.Enabled = false;        
-        }
+   
 
         private void backgroundWorkerSimulationLoop_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -94,18 +106,11 @@ namespace WirelessNetworkSymulationView
         private void backgroundWorkerSimulationLoop_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             _wirelessNetworkController.Plot();
-            progressBarSimulationLoop.Hide();
             EnableControls();
-        
+
         }
 
-        private void EnableControls()
-        {
-            textBoxSimulationTime.Enabled = true;
-            textBoxLambda.Enabled = true;
-            textBoxSeedSet.Enabled = true;
-            buttonRun.Enabled = true;
-        }
+     
 
         private void checkBoxEnableLogger_CheckedChanged(object sender, EventArgs e)
         {

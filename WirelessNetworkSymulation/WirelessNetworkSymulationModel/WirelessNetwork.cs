@@ -17,6 +17,8 @@ namespace WirelessNetworkSymulationModel
         private bool _enableLogger;
         private List<double> _times;
         private List<double> _means;
+        private int _runsNumber;
+
 
         public WirelessNetwork(int transmittersNumber, BackgroundWorker worker)
         {
@@ -25,6 +27,7 @@ namespace WirelessNetworkSymulationModel
             _seedSet = 0;
             _lambda = 0.0;
             _enableLogger = false;
+            _runsNumber = 0;
         }
 
         public double Lambda

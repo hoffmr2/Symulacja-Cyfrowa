@@ -14,5 +14,9 @@ namespace WirelessNetworkSymulationController
         void PlotSteadyState(List<double> times, List<double> means);
 
         BackgroundWorker GetBackgroundWorker();
+
+        void DisableControls();
+
+        void EnableControls();
     }
 }

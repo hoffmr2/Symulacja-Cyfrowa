@@ -28,11 +28,13 @@ namespace WirelessNetworkSymulationView
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend9 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SimulationView));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.singleRun = new System.Windows.Forms.TabPage();
+            this.progressBarSimulationLoop = new System.Windows.Forms.ProgressBar();
             this.buttonPlot = new System.Windows.Forms.Button();
             this.buttonRun = new System.Windows.Forms.Button();
             this.labelSeedSet = new System.Windows.Forms.Label();
@@ -45,7 +47,6 @@ namespace WirelessNetworkSymulationView
             this.chartSteadyState = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.multiRun = new System.Windows.Forms.TabPage();
             this.backgroundWorkerSimulationLoop = new System.ComponentModel.BackgroundWorker();
-            this.progressBarSimulationLoop = new System.Windows.Forms.ProgressBar();
             this.tabControl.SuspendLayout();
             this.singleRun.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartSteadyState)).BeginInit();
@@ -84,6 +85,16 @@ namespace WirelessNetworkSymulationView
             this.singleRun.TabIndex = 0;
             this.singleRun.Text = "Single Run";
             this.singleRun.UseVisualStyleBackColor = true;
+            // 
+            // progressBarSimulationLoop
+            // 
+            this.progressBarSimulationLoop.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBarSimulationLoop.Location = new System.Drawing.Point(208, 305);
+            this.progressBarSimulationLoop.MarqueeAnimationSpeed = 20;
+            this.progressBarSimulationLoop.Name = "progressBarSimulationLoop";
+            this.progressBarSimulationLoop.Size = new System.Drawing.Size(527, 23);
+            this.progressBarSimulationLoop.TabIndex = 10;
             // 
             // buttonPlot
             // 
@@ -171,17 +182,17 @@ namespace WirelessNetworkSymulationView
             // 
             this.chartSteadyState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea9.Name = "ChartArea1";
-            this.chartSteadyState.ChartAreas.Add(chartArea9);
-            legend9.Name = "Legend1";
-            this.chartSteadyState.Legends.Add(legend9);
+            chartArea1.Name = "ChartArea1";
+            this.chartSteadyState.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chartSteadyState.Legends.Add(legend1);
             this.chartSteadyState.Location = new System.Drawing.Point(6, 6);
             this.chartSteadyState.Name = "chartSteadyState";
-            series9.ChartArea = "ChartArea1";
-            series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastPoint;
-            series9.Legend = "Legend1";
-            series9.Name = "error mean";
-            this.chartSteadyState.Series.Add(series9);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastPoint;
+            series1.Legend = "Legend1";
+            series1.Name = "error mean";
+            this.chartSteadyState.Series.Add(series1);
             this.chartSteadyState.Size = new System.Drawing.Size(657, 161);
             this.chartSteadyState.TabIndex = 0;
             this.chartSteadyState.Text = "chart1";
@@ -191,7 +202,7 @@ namespace WirelessNetworkSymulationView
             this.multiRun.Location = new System.Drawing.Point(4, 22);
             this.multiRun.Name = "multiRun";
             this.multiRun.Padding = new System.Windows.Forms.Padding(3);
-            this.multiRun.Size = new System.Drawing.Size(669, 391);
+            this.multiRun.Size = new System.Drawing.Size(741, 391);
             this.multiRun.TabIndex = 1;
             this.multiRun.Text = "Multi Run";
             this.multiRun.UseVisualStyleBackColor = true;
@@ -203,23 +214,13 @@ namespace WirelessNetworkSymulationView
             this.backgroundWorkerSimulationLoop.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerSimulationLoop_ProgressChanged);
             this.backgroundWorkerSimulationLoop.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSimulationLoop_RunWorkerCompleted);
             // 
-            // progressBarSimulationLoop
-            // 
-            this.progressBarSimulationLoop.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBarSimulationLoop.Location = new System.Drawing.Point(208, 305);
-            this.progressBarSimulationLoop.MarqueeAnimationSpeed = 20;
-            this.progressBarSimulationLoop.Name = "progressBarSimulationLoop";
-            this.progressBarSimulationLoop.Size = new System.Drawing.Size(527, 23);
-            this.progressBarSimulationLoop.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.progressBarSimulationLoop.TabIndex = 10;
-            // 
             // SimulationView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(773, 441);
             this.Controls.Add(this.tabControl);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SimulationView";
             this.Text = "SymulationView";
             this.tabControl.ResumeLayout(false);
