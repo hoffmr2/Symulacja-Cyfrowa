@@ -31,11 +31,14 @@ namespace WirelessNetworkSymulationView
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SimulationView));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.singleRun = new System.Windows.Forms.TabPage();
             this.progressBarSimulationLoop = new System.Windows.Forms.ProgressBar();
-            this.buttonPlot = new System.Windows.Forms.Button();
+            this.buttonSteadyStateAnalysis = new System.Windows.Forms.Button();
             this.buttonRun = new System.Windows.Forms.Button();
             this.labelSeedSet = new System.Windows.Forms.Label();
             this.labelLambda = new System.Windows.Forms.Label();
@@ -46,10 +49,13 @@ namespace WirelessNetworkSymulationView
             this.checkBoxEnableLogger = new System.Windows.Forms.CheckBox();
             this.chartSteadyState = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.multiRun = new System.Windows.Forms.TabPage();
+            this.chartSteadyStateAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.backgroundWorkerSimulationLoop = new System.ComponentModel.BackgroundWorker();
             this.tabControl.SuspendLayout();
             this.singleRun.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartSteadyState)).BeginInit();
+            this.multiRun.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartSteadyStateAnalysis)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -68,7 +74,7 @@ namespace WirelessNetworkSymulationView
             // singleRun
             // 
             this.singleRun.Controls.Add(this.progressBarSimulationLoop);
-            this.singleRun.Controls.Add(this.buttonPlot);
+            this.singleRun.Controls.Add(this.buttonSteadyStateAnalysis);
             this.singleRun.Controls.Add(this.buttonRun);
             this.singleRun.Controls.Add(this.labelSeedSet);
             this.singleRun.Controls.Add(this.labelLambda);
@@ -96,15 +102,15 @@ namespace WirelessNetworkSymulationView
             this.progressBarSimulationLoop.Size = new System.Drawing.Size(527, 23);
             this.progressBarSimulationLoop.TabIndex = 10;
             // 
-            // buttonPlot
+            // buttonSteadyStateAnalysis
             // 
-            this.buttonPlot.Location = new System.Drawing.Point(208, 197);
-            this.buttonPlot.Name = "buttonPlot";
-            this.buttonPlot.Size = new System.Drawing.Size(159, 23);
-            this.buttonPlot.TabIndex = 9;
-            this.buttonPlot.Text = "plot";
-            this.buttonPlot.UseVisualStyleBackColor = true;
-            this.buttonPlot.Click += new System.EventHandler(this.buttonPlot_Click);
+            this.buttonSteadyStateAnalysis.Location = new System.Drawing.Point(339, 197);
+            this.buttonSteadyStateAnalysis.Name = "buttonSteadyStateAnalysis";
+            this.buttonSteadyStateAnalysis.Size = new System.Drawing.Size(159, 23);
+            this.buttonSteadyStateAnalysis.TabIndex = 9;
+            this.buttonSteadyStateAnalysis.Text = "analize steady state";
+            this.buttonSteadyStateAnalysis.UseVisualStyleBackColor = true;
+            this.buttonSteadyStateAnalysis.Click += new System.EventHandler(this.buttonSteadyStateAnalysis_Click);
             // 
             // buttonRun
             // 
@@ -139,9 +145,9 @@ namespace WirelessNetworkSymulationView
             this.labelSimulationTime.AutoSize = true;
             this.labelSimulationTime.Location = new System.Drawing.Point(118, 200);
             this.labelSimulationTime.Name = "labelSimulationTime";
-            this.labelSimulationTime.Size = new System.Drawing.Size(75, 13);
+            this.labelSimulationTime.Size = new System.Drawing.Size(97, 13);
             this.labelSimulationTime.TabIndex = 5;
-            this.labelSimulationTime.Text = "simulation time";
+            this.labelSimulationTime.Text = "simulation time [ms]";
             // 
             // textBoxSeedSet
             // 
@@ -199,13 +205,30 @@ namespace WirelessNetworkSymulationView
             // 
             // multiRun
             // 
+            this.multiRun.Controls.Add(this.chartSteadyStateAnalysis);
             this.multiRun.Location = new System.Drawing.Point(4, 22);
             this.multiRun.Name = "multiRun";
             this.multiRun.Padding = new System.Windows.Forms.Padding(3);
             this.multiRun.Size = new System.Drawing.Size(741, 391);
             this.multiRun.TabIndex = 1;
-            this.multiRun.Text = "Multi Run";
+            this.multiRun.Text = "Steady state analysis";
             this.multiRun.UseVisualStyleBackColor = true;
+            // 
+            // chartSteadyStateAnalysis
+            // 
+            chartArea2.Name = "ChartArea1";
+            this.chartSteadyStateAnalysis.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chartSteadyStateAnalysis.Legends.Add(legend2);
+            this.chartSteadyStateAnalysis.Location = new System.Drawing.Point(6, 6);
+            this.chartSteadyStateAnalysis.Name = "chartSteadyStateAnalysis";
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chartSteadyStateAnalysis.Series.Add(series2);
+            this.chartSteadyStateAnalysis.Size = new System.Drawing.Size(729, 300);
+            this.chartSteadyStateAnalysis.TabIndex = 0;
+            this.chartSteadyStateAnalysis.Text = "chart1";
             // 
             // backgroundWorkerSimulationLoop
             // 
@@ -227,6 +250,8 @@ namespace WirelessNetworkSymulationView
             this.singleRun.ResumeLayout(false);
             this.singleRun.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartSteadyState)).EndInit();
+            this.multiRun.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartSteadyStateAnalysis)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -245,8 +270,9 @@ namespace WirelessNetworkSymulationView
         private System.Windows.Forms.Label labelSimulationTime;
         private System.Windows.Forms.TextBox textBoxSeedSet;
         private System.Windows.Forms.Button buttonRun;
-        private System.Windows.Forms.Button buttonPlot;
+        private System.Windows.Forms.Button buttonSteadyStateAnalysis;
         private System.ComponentModel.BackgroundWorker backgroundWorkerSimulationLoop;
         private System.Windows.Forms.ProgressBar progressBarSimulationLoop;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartSteadyStateAnalysis;
     }
 }

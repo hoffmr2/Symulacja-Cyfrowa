@@ -10,6 +10,8 @@ namespace WirelessNetworkSymulationModel
 {
     public class WirelessNetwork
     {
+        public const int TimeScalingFactor = 10;
+        public const int MaxSeedSetIndex = 30;
         private Supervisor _supervisor;
         private int _simulationTime;
         private int _seedSet;
@@ -69,6 +71,24 @@ namespace WirelessNetworkSymulationModel
         public void Run()
         {
             _supervisor.Run(SimulationTime,SeedSet,Lambda,_enableLogger,out _times,out _means);
+        }
+
+        public void SteadyStateAnalysis()
+        {
+            _supervisor.Run(SimulationTime, Lambda, out _times, out _means);
+        }
+
+        public bool ValidateSimulationParameters()
+        {
+            if(_simulationTime <= 0)
+                return false;
+            if(Lambda <= 0)
+                return false;
+            if(_seedSet <= 0 && _seedSet > MaxSeedSetIndex)
+                return false;
+            if (_runsNumber <= 0)
+                return false;
+            return true;
         }
     }
 }

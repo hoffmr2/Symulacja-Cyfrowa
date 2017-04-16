@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,12 @@ namespace WirelessNetworkSymulationView
         
         }
 
+        enum BackgroundWorkerMode
+        {
+            SingleLoop,
+            SteadyStateAnalysis
+        }
+
         #region IWirelessNetworkView implementation
 
         public void SetController(WirelessNetworkController controller)
@@ -31,6 +38,8 @@ namespace WirelessNetworkSymulationView
 
         public void PlotSteadyState(List<double> times, List<double> means)
         {
+            if (times == null || means == null)
+                return;
            chartSteadyState.Series["error mean"].Points.Clear();
             for(int i=0;i< times.Count;++i)
             {
@@ -52,6 +61,8 @@ namespace WirelessNetworkSymulationView
             textBoxLambda.Enabled = false;
             textBoxSeedSet.Enabled = false;
             buttonRun.Enabled = false;
+            buttonSteadyStateAnalysis.Enabled = false;
+            checkBoxEnableLogger.Enabled = false;
         }
 
         public void EnableControls()
@@ -60,6 +71,8 @@ namespace WirelessNetworkSymulationView
             textBoxLambda.Enabled = true;
             textBoxSeedSet.Enabled = true;
             buttonRun.Enabled = true;
+            buttonSteadyStateAnalysis.Enabled = true;
+            checkBoxEnableLogger.Enabled = true;
         }
 
         #endregion
@@ -82,18 +95,30 @@ namespace WirelessNetworkSymulationView
         private void buttonRun_Click(object sender, EventArgs e)
         {
             DisableControls();  
-            backgroundWorkerSimulationLoop.RunWorkerAsync();
+            backgroundWorkerSimulationLoop.RunWorkerAsync(BackgroundWorkerMode.SingleLoop);
         }
 
-        private void buttonPlot_Click(object sender, EventArgs e)
+        private void buttonSteadyStateAnalysis_Click(object sender, EventArgs e)
         {
-           // _wirelessNetworkController.Plot();
+            DisableControls();
+           backgroundWorkerSimulationLoop.RunWorkerAsync(BackgroundWorkerMode.SteadyStateAnalysis);
         }
 
         private void backgroundWorkerSimulationLoop_DoWork(object sender, DoWorkEventArgs e)
         {
-            _wirelessNetworkController.Run();
-
+            BackgroundWorkerMode mode = (BackgroundWorkerMode) e.Argument;
+            switch (mode)
+            {
+                case BackgroundWorkerMode.SingleLoop:
+                    _wirelessNetworkController.Run();
+                    break;
+                case BackgroundWorkerMode.SteadyStateAnalysis:
+                    _wirelessNetworkController.SteadyStateAnalysis();
+                    break;
+                default:
+                    Debug.Assert(false);
+                    break;
+            }
         }
 
    
@@ -116,5 +141,6 @@ namespace WirelessNetworkSymulationView
         {
             _wirelessNetworkController.SetEnableLogger(checkBoxEnableLogger.Checked);
         }
+
     }
 }

@@ -21,7 +21,7 @@ namespace WirelessNetworkComponents
     public class Supervisor
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Supervisor));
-
+        private const int SimulationsNumber = 15;
         private int TransmittersNumber; //K = 4
         private int _mainClock; //time 10*ms
         private int _simulationTime;
@@ -134,6 +134,32 @@ namespace WirelessNetworkComponents
 
             times = _transmissionChannel.Times;
             means = _transmissionChannel.Means;
+        }
+
+        public void Run(int simulationTime, double lambda, out List<double> times, out List<double> means)
+        {
+            means = null;
+            times = null;
+            for (int i = 0; i < SimulationsNumber; ++i)
+            {
+                Run(simulationTime, i, lambda, false);
+                if (i == 0)
+                {
+                    times = _transmissionChannel.Times;
+                    means = _transmissionChannel.Means;
+                }
+                else
+                {
+                    for (var j=0;j<means.Count;++j)
+                    {
+                        means[j] += _transmissionChannel.Means[j];
+                    }
+                }
+            }
+            for (var j = 0; j < means.Count; ++j)
+            {
+                means[j] /= SimulationsNumber;
+            }
         }
 
         private void SimulationLoop()

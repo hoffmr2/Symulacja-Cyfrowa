@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using WirelessNetworkSymulationModel;
 
 namespace WirelessNetworkSymulationController
@@ -12,6 +13,7 @@ namespace WirelessNetworkSymulationController
     public class WirelessNetworkController
     {
         private const int TransmittersNumber = 4;
+
         private IWirelessNetworkView _wirelessNetworkView;
         private WirelessNetwork _wirelessNetwork;
 
@@ -27,6 +29,7 @@ namespace WirelessNetworkSymulationController
             try
             {
                 var timeValue = int.Parse(time);
+                timeValue = Math.Abs(WirelessNetwork.TimeScalingFactor * timeValue);
                 _wirelessNetwork.SimulationTime = timeValue;
             }
             catch
@@ -40,6 +43,7 @@ namespace WirelessNetworkSymulationController
             try
             {
                 var lambdaValue = double.Parse(lambda);
+                lambdaValue = Math.Abs(lambdaValue);
                _wirelessNetwork.Lambda = lambdaValue;
             }
             catch
@@ -53,6 +57,7 @@ namespace WirelessNetworkSymulationController
             try
             {
                 var seedSetValue = int.Parse(seedSet);
+                seedSetValue = Math.Abs(seedSetValue % WirelessNetwork.MaxSeedSetIndex);
                 _wirelessNetwork.SeedSet = seedSetValue;
             }
             catch
@@ -68,14 +73,28 @@ namespace WirelessNetworkSymulationController
 
         public void Run()
         {
-            _wirelessNetwork.Run();
+            if(_wirelessNetwork.ValidateSimulationParameters())
+                _wirelessNetwork.Run();
+            else
+            {
+                MessageBox.Show("error", "Wrong Simulation Parameters",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+            }
+        }
+
+        public void SteadyStateAnalysis()
+        {
+            if (_wirelessNetwork.ValidateSimulationParameters())
+                _wirelessNetwork.SteadyStateAnalysis();
+            else
+            {
+                MessageBox.Show("error", "Wrong Simulation Parameters", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         public void Plot()
         {
             _wirelessNetworkView.PlotSteadyState(_wirelessNetwork.Times, _wirelessNetwork.Means);
         }
-
 
     }
 }
