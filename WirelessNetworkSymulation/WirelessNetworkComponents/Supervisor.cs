@@ -140,25 +140,40 @@ namespace WirelessNetworkComponents
         {
             means = null;
             times = null;
+            means = new List<double>();
+            times = new List<double>();
             for (int i = 0; i < SimulationsNumber; ++i)
             {
                 Run(simulationTime, i, lambda, false);
                 if (i == 0)
                 {
-                    times = _transmissionChannel.Times;
-                    means = _transmissionChannel.Means;
+                    for (var j = 0; j < _transmissionChannel.Means.Count; ++j)
+                    {
+                            means.Add(_transmissionChannel.Means[j]);
+                       times.Add(_transmissionChannel.Times[j]);
+                    }
                 }
                 else
                 {
-                    for (var j=0;j<means.Count;++j)
+                    for (var j = 0; j < means.Count; ++j)
                     {
-                        means[j] += _transmissionChannel.Means[j];
+
+                        try
+                        {
+                            means[j] += _transmissionChannel.Means[j];
+                        }
+                        catch
+                        {
+                         
+                        }
+                      
                     }
                 }
+                 
             }
             for (var j = 0; j < means.Count; ++j)
             {
-                means[j] /= SimulationsNumber;
+                means[j] /= (double)SimulationsNumber;
             }
         }
 

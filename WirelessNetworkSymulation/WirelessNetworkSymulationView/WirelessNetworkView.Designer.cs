@@ -68,7 +68,7 @@ namespace WirelessNetworkSymulationView
             this.tabControl.Location = new System.Drawing.Point(12, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(749, 417);
+            this.tabControl.Size = new System.Drawing.Size(749, 306);
             this.tabControl.TabIndex = 2;
             // 
             // singleRun
@@ -87,16 +87,15 @@ namespace WirelessNetworkSymulationView
             this.singleRun.Location = new System.Drawing.Point(4, 22);
             this.singleRun.Name = "singleRun";
             this.singleRun.Padding = new System.Windows.Forms.Padding(3);
-            this.singleRun.Size = new System.Drawing.Size(741, 391);
+            this.singleRun.Size = new System.Drawing.Size(741, 280);
             this.singleRun.TabIndex = 0;
             this.singleRun.Text = "Single Run";
             this.singleRun.UseVisualStyleBackColor = true;
             // 
             // progressBarSimulationLoop
             // 
-            this.progressBarSimulationLoop.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBarSimulationLoop.Location = new System.Drawing.Point(208, 305);
+            this.progressBarSimulationLoop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.progressBarSimulationLoop.Location = new System.Drawing.Point(184, 220);
             this.progressBarSimulationLoop.MarqueeAnimationSpeed = 20;
             this.progressBarSimulationLoop.Name = "progressBarSimulationLoop";
             this.progressBarSimulationLoop.Size = new System.Drawing.Size(527, 23);
@@ -104,7 +103,8 @@ namespace WirelessNetworkSymulationView
             // 
             // buttonSteadyStateAnalysis
             // 
-            this.buttonSteadyStateAnalysis.Location = new System.Drawing.Point(339, 197);
+            this.buttonSteadyStateAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonSteadyStateAnalysis.Location = new System.Drawing.Point(19, 233);
             this.buttonSteadyStateAnalysis.Name = "buttonSteadyStateAnalysis";
             this.buttonSteadyStateAnalysis.Size = new System.Drawing.Size(159, 23);
             this.buttonSteadyStateAnalysis.TabIndex = 9;
@@ -114,7 +114,8 @@ namespace WirelessNetworkSymulationView
             // 
             // buttonRun
             // 
-            this.buttonRun.Location = new System.Drawing.Point(34, 305);
+            this.buttonRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonRun.Location = new System.Drawing.Point(19, 204);
             this.buttonRun.Name = "buttonRun";
             this.buttonRun.Size = new System.Drawing.Size(159, 23);
             this.buttonRun.TabIndex = 8;
@@ -124,8 +125,9 @@ namespace WirelessNetworkSymulationView
             // 
             // labelSeedSet
             // 
+            this.labelSeedSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSeedSet.AutoSize = true;
-            this.labelSeedSet.Location = new System.Drawing.Point(118, 254);
+            this.labelSeedSet.Location = new System.Drawing.Point(532, 174);
             this.labelSeedSet.Name = "labelSeedSet";
             this.labelSeedSet.Size = new System.Drawing.Size(47, 13);
             this.labelSeedSet.TabIndex = 7;
@@ -133,8 +135,9 @@ namespace WirelessNetworkSymulationView
             // 
             // labelLambda
             // 
+            this.labelLambda.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelLambda.AutoSize = true;
-            this.labelLambda.Location = new System.Drawing.Point(118, 227);
+            this.labelLambda.Location = new System.Drawing.Point(401, 174);
             this.labelLambda.Name = "labelLambda";
             this.labelLambda.Size = new System.Drawing.Size(41, 13);
             this.labelLambda.TabIndex = 6;
@@ -142,8 +145,9 @@ namespace WirelessNetworkSymulationView
             // 
             // labelSimulationTime
             // 
+            this.labelSimulationTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSimulationTime.AutoSize = true;
-            this.labelSimulationTime.Location = new System.Drawing.Point(118, 200);
+            this.labelSimulationTime.Location = new System.Drawing.Point(214, 174);
             this.labelSimulationTime.Name = "labelSimulationTime";
             this.labelSimulationTime.Size = new System.Drawing.Size(97, 13);
             this.labelSimulationTime.TabIndex = 5;
@@ -151,7 +155,8 @@ namespace WirelessNetworkSymulationView
             // 
             // textBoxSeedSet
             // 
-            this.textBoxSeedSet.Location = new System.Drawing.Point(34, 251);
+            this.textBoxSeedSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxSeedSet.Location = new System.Drawing.Point(448, 171);
             this.textBoxSeedSet.Name = "textBoxSeedSet";
             this.textBoxSeedSet.Size = new System.Drawing.Size(78, 20);
             this.textBoxSeedSet.TabIndex = 4;
@@ -159,7 +164,8 @@ namespace WirelessNetworkSymulationView
             // 
             // textBoxLambda
             // 
-            this.textBoxLambda.Location = new System.Drawing.Point(34, 224);
+            this.textBoxLambda.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxLambda.Location = new System.Drawing.Point(317, 171);
             this.textBoxLambda.Name = "textBoxLambda";
             this.textBoxLambda.Size = new System.Drawing.Size(78, 20);
             this.textBoxLambda.TabIndex = 3;
@@ -167,7 +173,8 @@ namespace WirelessNetworkSymulationView
             // 
             // textBoxSimulationTime
             // 
-            this.textBoxSimulationTime.Location = new System.Drawing.Point(34, 197);
+            this.textBoxSimulationTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxSimulationTime.Location = new System.Drawing.Point(130, 171);
             this.textBoxSimulationTime.Name = "textBoxSimulationTime";
             this.textBoxSimulationTime.Size = new System.Drawing.Size(78, 20);
             this.textBoxSimulationTime.TabIndex = 2;
@@ -175,6 +182,7 @@ namespace WirelessNetworkSymulationView
             // 
             // checkBoxEnableLogger
             // 
+            this.checkBoxEnableLogger.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxEnableLogger.AutoSize = true;
             this.checkBoxEnableLogger.Location = new System.Drawing.Point(34, 174);
             this.checkBoxEnableLogger.Name = "checkBoxEnableLogger";
@@ -186,7 +194,8 @@ namespace WirelessNetworkSymulationView
             // 
             // chartSteadyState
             // 
-            this.chartSteadyState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.chartSteadyState.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             chartArea1.Name = "ChartArea1";
             this.chartSteadyState.ChartAreas.Add(chartArea1);
@@ -195,7 +204,7 @@ namespace WirelessNetworkSymulationView
             this.chartSteadyState.Location = new System.Drawing.Point(6, 6);
             this.chartSteadyState.Name = "chartSteadyState";
             series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastPoint;
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
             series1.Legend = "Legend1";
             series1.Name = "error mean";
             this.chartSteadyState.Series.Add(series1);
@@ -209,7 +218,7 @@ namespace WirelessNetworkSymulationView
             this.multiRun.Location = new System.Drawing.Point(4, 22);
             this.multiRun.Name = "multiRun";
             this.multiRun.Padding = new System.Windows.Forms.Padding(3);
-            this.multiRun.Size = new System.Drawing.Size(741, 391);
+            this.multiRun.Size = new System.Drawing.Size(741, 280);
             this.multiRun.TabIndex = 1;
             this.multiRun.Text = "Steady state analysis";
             this.multiRun.UseVisualStyleBackColor = true;
@@ -241,7 +250,7 @@ namespace WirelessNetworkSymulationView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(773, 441);
+            this.ClientSize = new System.Drawing.Size(773, 330);
             this.Controls.Add(this.tabControl);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SimulationView";

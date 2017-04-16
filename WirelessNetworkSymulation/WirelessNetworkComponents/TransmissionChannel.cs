@@ -149,6 +149,7 @@ namespace WirelessNetworkComponents
             _times.Clear();
             _failedTransmissions = 0;
             _succesTransmissions = 0;
+            _totalTransmissions = 0;
         }
 
         public void Reset()
