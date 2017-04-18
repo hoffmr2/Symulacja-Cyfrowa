@@ -226,7 +226,7 @@ namespace WirelessNetworkComponents
              
             }
             LogSimulationResults();
-            System.Threading.Thread.Sleep(50);
+         //   System.Threading.Thread.Sleep(50);
 
         }
 

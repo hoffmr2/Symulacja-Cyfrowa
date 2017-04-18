@@ -89,6 +89,7 @@ namespace WirelessNetworkSymulationView
             textBoxSamplesNumber.Enabled = false;
             textBoxUniformGeneratorLowBound.Enabled = false;
             textBoxUniformGeneratorUpBound.Enabled = false;
+            buttonAnalyzeGenerators.Enabled = false;
         }
 
         private void DisableSingleRunTabControls()
@@ -114,6 +115,7 @@ namespace WirelessNetworkSymulationView
             textBoxSamplesNumber.Enabled = true;
             textBoxUniformGeneratorLowBound.Enabled = true;
             textBoxUniformGeneratorUpBound.Enabled = true;
+            buttonAnalyzeGenerators.Enabled = true;
         }
 
         private void EnableSingleRunTabControls()
