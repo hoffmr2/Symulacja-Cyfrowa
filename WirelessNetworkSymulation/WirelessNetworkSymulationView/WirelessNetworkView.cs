@@ -16,7 +16,6 @@ namespace WirelessNetworkSymulationView
     public partial class SimulationView : Form, IWirelessNetworkView
     {
         private WirelessNetworkController _wirelessNetworkController;
-        private Thread t;
         public SimulationView()
         {
             InitializeComponent();
@@ -26,10 +25,33 @@ namespace WirelessNetworkSymulationView
         enum BackgroundWorkerMode
         {
             SingleLoop,
-            SteadyStateAnalysis
+            SteadyStateAnalysis,
+            RandomGeneratorsAnalysis
         }
 
         #region IWirelessNetworkView implementation
+
+        public void PlotUniformGeneratorHistogram(SortedDictionary<double, int> data)
+        {
+            if (data == null)
+                return;
+            chartUniformGeneratorAnalysis.Series["Uniform Generator"].Points.Clear();
+            foreach(var pair in data)
+            {
+                chartUniformGeneratorAnalysis.Series["Uniform Generator"].Points.AddXY(pair.Key, pair.Value);
+            }
+        }
+
+        public void PlotExpGeneratorHistogram(SortedDictionary<double, int> data)
+        {
+            if (data == null)
+                return;
+            chartExponentialGeneratorAnalysis.Series["Exp generator"].Points.Clear();
+            foreach (var pair in data)
+            {
+                chartExponentialGeneratorAnalysis.Series["Exp generator"].Points.AddXY(pair.Key, pair.Value);
+            }
+        }
 
         public void SetController(WirelessNetworkController controller)
         {
@@ -56,7 +78,21 @@ namespace WirelessNetworkSymulationView
 
         public void DisableControls()
         {
+            DisableSingleRunTabControls();
+            DisableGeneratorAnalysisTabControls();
+        }
 
+        private void DisableGeneratorAnalysisTabControls()
+        {
+            textBoxGeneratorAnalysisLambda.Enabled = false;
+            textBoxGeneratorAnalysisSeedSet.Enabled = false;
+            textBoxSamplesNumber.Enabled = false;
+            textBoxUniformGeneratorLowBound.Enabled = false;
+            textBoxUniformGeneratorUpBound.Enabled = false;
+        }
+
+        private void DisableSingleRunTabControls()
+        {
             textBoxSimulationTime.Enabled = false;
             textBoxLambda.Enabled = false;
             textBoxSeedSet.Enabled = false;
@@ -66,6 +102,21 @@ namespace WirelessNetworkSymulationView
         }
 
         public void EnableControls()
+        {
+            EnableSingleRunTabControls();
+            EnableGeneratorAnalysisTabControls();
+        }
+
+        private void EnableGeneratorAnalysisTabControls()
+        {
+            textBoxGeneratorAnalysisLambda.Enabled = true;
+            textBoxGeneratorAnalysisSeedSet.Enabled = true;
+            textBoxSamplesNumber.Enabled = true;
+            textBoxUniformGeneratorLowBound.Enabled = true;
+            textBoxUniformGeneratorUpBound.Enabled = true;
+        }
+
+        private void EnableSingleRunTabControls()
         {
             textBoxSimulationTime.Enabled = true;
             textBoxLambda.Enabled = true;
@@ -115,6 +166,9 @@ namespace WirelessNetworkSymulationView
                 case BackgroundWorkerMode.SteadyStateAnalysis:
                     _wirelessNetworkController.SteadyStateAnalysis();
                     break;
+                case BackgroundWorkerMode.RandomGeneratorsAnalysis:
+                    _wirelessNetworkController.RandomGeneratorsAnalysis();
+                    break;
                 default:
                     Debug.Assert(false);
                     break;
@@ -131,6 +185,8 @@ namespace WirelessNetworkSymulationView
         private void backgroundWorkerSimulationLoop_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             _wirelessNetworkController.Plot();
+            _wirelessNetworkController.PlotGeneratorsHistograms();
+
             EnableControls();
 
         }
@@ -142,5 +198,35 @@ namespace WirelessNetworkSymulationView
             _wirelessNetworkController.SetEnableLogger(checkBoxEnableLogger.Checked);
         }
 
+        private void textBoxUniformGeneratorLowBound_TextChanged(object sender, EventArgs e)
+        {
+            _wirelessNetworkController.SetGeneratorAnalysisDownBound(textBoxUniformGeneratorLowBound.Text);
+        }
+
+        private void textBoxUniformGeneratorUpBound_TextChanged(object sender, EventArgs e)
+        {
+            _wirelessNetworkController.SetGeneratorAnalysisUpBound(textBoxUniformGeneratorUpBound.Text);
+        }
+
+        private void textBoxGeneratorAnalysisLambda_TextChanged(object sender, EventArgs e)
+        {
+            _wirelessNetworkController.SetGeneratorAnalysisLambda(textBoxGeneratorAnalysisLambda.Text);
+        }
+
+        private void textBoxGeneratorAnalysisSeedSet_TextChanged(object sender, EventArgs e)
+        {
+            _wirelessNetworkController.SetGeneratorAnalysisSeedSet(textBoxGeneratorAnalysisSeedSet.Text);
+        }
+
+        private void textBoxSamplesNumber_TextChanged(object sender, EventArgs e)
+        {
+            _wirelessNetworkController.SetGeneratorAnalysisSamplesNumber(textBoxSamplesNumber.Text);
+        }
+
+        private void buttonAnalyzeGenerators_Click(object sender, EventArgs e)
+        {
+            DisableControls();
+            backgroundWorkerSimulationLoop.RunWorkerAsync(BackgroundWorkerMode.RandomGeneratorsAnalysis);
+        }
     }
 }

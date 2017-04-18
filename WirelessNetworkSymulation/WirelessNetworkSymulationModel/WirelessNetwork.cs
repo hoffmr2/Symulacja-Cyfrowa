@@ -13,6 +13,7 @@ namespace WirelessNetworkSymulationModel
         public const int TimeScalingFactor = 10;
         public const int MaxSeedSetIndex = 30;
         private Supervisor _supervisor;
+        private RandomGeneratorsAnalyzer _randomGeneratorsAnalyzer;
         private int _simulationTime;
         private int _seedSet;
         private double _lambda;
@@ -24,6 +25,7 @@ namespace WirelessNetworkSymulationModel
         public WirelessNetwork(int transmittersNumber, BackgroundWorker worker)
         {
             _supervisor = new Supervisor(transmittersNumber, worker);
+            _randomGeneratorsAnalyzer = new RandomGeneratorsAnalyzer();
             _simulationTime = 0;
             _seedSet = 0;
             _lambda = 0.0;
@@ -64,6 +66,12 @@ namespace WirelessNetworkSymulationModel
         {
             get { return _enableLogger; }
             set { _enableLogger = value; }
+        }
+
+        public RandomGeneratorsAnalyzer GeneratorsAnalyzer
+        {
+            get { return _randomGeneratorsAnalyzer; }
+            set { _randomGeneratorsAnalyzer = value; }
         }
 
         public void Run()

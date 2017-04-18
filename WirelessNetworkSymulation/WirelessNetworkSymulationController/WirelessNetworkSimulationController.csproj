@@ -46,6 +46,10 @@
     <Compile Include="WirelessNetworkController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WirelessNetworkComponents\WirelessNetworkComponents.csproj">
+      <Project>{b5b3666d-f97b-4b76-9b6e-21f03cb2410c}</Project>
+      <Name>WirelessNetworkComponents</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WirelessNetworkSymulationModel\WirelessNetworkSimulationModel.csproj">
       <Project>{68e993ae-89a8-4bd0-86f0-d5d356569381}</Project>
       <Name>WirelessNetworkSimulationModel</Name>

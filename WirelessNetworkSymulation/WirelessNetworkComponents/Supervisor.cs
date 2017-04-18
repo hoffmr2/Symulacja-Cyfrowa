@@ -100,14 +100,7 @@ namespace WirelessNetworkComponents
 
         public void Run(int simulationTime, int seedSet, double lambda,bool enableLogger )
         {
-            if (!enableLogger)
-            {
-                log.Logger.Repository.Threshold = Level.Off;
-            }
-            else
-            {
-                log.Logger.Repository.Threshold = Level.All;
-            }
+            SetLogging(enableLogger);
             _simulationTime = simulationTime;
             _mainClock = 0;
             _processesNumber = 0;
@@ -117,10 +110,27 @@ namespace WirelessNetworkComponents
 
         }
 
+        private static void SetLogging(bool enableLogger)
+        {
+            if (!enableLogger)
+            {
+                log.Logger.Repository.Threshold = Level.Off;
+            }
+            else
+            {
+                log.Logger.Repository.Threshold = Level.All;
+            }
+        }
+
         private void ResetSimulationComponents()
         {
             _processes.Clear();
             _transmissionChannel.Reset();
+            ResetTransmitters();
+        }
+
+        private void ResetTransmitters()
+        {
             foreach (var transmitter in _transmitters)
             {
                 transmitter.Reset();
@@ -192,6 +202,10 @@ namespace WirelessNetworkComponents
                         _worker.ReportProgress((int)((float)_mainClock / (float)SimulationTime * 100));
 
                     }
+                
+                }
+                if (_transmissionChannel.Times.Contains(_mainClock) == false)
+                {
                     _transmissionChannel.Times.Add(_mainClock);
                     _transmissionChannel.Means.Add(_transmissionChannel.ErrorMean);
                 }
@@ -201,8 +215,6 @@ namespace WirelessNetworkComponents
                 
                 if (current.Value.IsSleeped)
                 {
-                    //current.Value.Activate(_processes.Last().Key-MainClock);
-                    //_processes.Add(current.Value.EventTime, current.Value);
                     continue;
                 }
                 _mainClock = current.Value.EventTime;

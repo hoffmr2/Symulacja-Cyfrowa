@@ -13,6 +13,10 @@ namespace WirelessNetworkSymulationController
 
         void PlotSteadyState(List<double> times, List<double> means);
 
+        void PlotUniformGeneratorHistogram(SortedDictionary<double, int> data);
+
+        void PlotExpGeneratorHistogram(SortedDictionary<double, int> data);
+
         BackgroundWorker GetBackgroundWorker();
 
         void DisableControls();

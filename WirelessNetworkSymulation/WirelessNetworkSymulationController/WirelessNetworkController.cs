@@ -52,6 +52,20 @@ namespace WirelessNetworkSymulationController
             }
         }
 
+        public void SetGeneratorAnalysisLambda(string lambda)
+        {
+            try
+            {
+                var lambdaValue = double.Parse(lambda);
+                lambdaValue = Math.Abs(lambdaValue);
+                _wirelessNetwork.GeneratorsAnalyzer.Lambda = lambdaValue;
+            }
+            catch
+            {
+
+            }
+        }
+
         public void SetSeedSet(string seedSet)
         {
             try
@@ -59,6 +73,62 @@ namespace WirelessNetworkSymulationController
                 var seedSetValue = int.Parse(seedSet);
                 seedSetValue = Math.Abs(seedSetValue % WirelessNetwork.MaxSeedSetIndex);
                 _wirelessNetwork.SeedSet = seedSetValue;
+            }
+            catch
+            {
+
+            }
+        }
+
+        public void SetGeneratorAnalysisSeedSet(string seedSet)
+        {
+            try
+            {
+                var seedSetValue = int.Parse(seedSet);
+                seedSetValue = Math.Abs(seedSetValue % WirelessNetwork.MaxSeedSetIndex);
+                _wirelessNetwork.GeneratorsAnalyzer.SeedSet = seedSetValue;
+            }
+            catch
+            {
+
+            }
+        }
+
+        public void SetGeneratorAnalysisUpBound(string seedSet)
+        {
+            try
+            {
+                var value = int.Parse(seedSet);
+                value = Math.Abs(value);
+                _wirelessNetwork.GeneratorsAnalyzer.UnifromGeneratorUpBound = value;
+            }
+            catch
+            {
+
+            }
+        }
+
+        public void SetGeneratorAnalysisDownBound(string seedSet)
+        {
+            try
+            {
+                var value = int.Parse(seedSet);
+                value = Math.Abs(value);
+                _wirelessNetwork.GeneratorsAnalyzer.UniformGeneratorDownBound = value;
+            }
+            catch
+            {
+
+            }
+        }
+
+        public void SetGeneratorAnalysisSamplesNumber(string seedSet)
+        {
+            try
+            {
+                var value = int.Parse(seedSet);
+                value = Math.Abs(value);
+                _wirelessNetwork.GeneratorsAnalyzer.SamplesNumber = value;
             }
             catch
             {
@@ -91,10 +161,25 @@ namespace WirelessNetworkSymulationController
             }
         }
 
+        public void RandomGeneratorsAnalysis()
+        {
+            if (_wirelessNetwork.GeneratorsAnalyzer.IsInitialized())
+                _wirelessNetwork.GeneratorsAnalyzer.RunAnalysis();
+            else
+            {
+                MessageBox.Show("error", "Wrong Parameters", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
         public void Plot()
         {
             _wirelessNetworkView.PlotSteadyState(_wirelessNetwork.Times, _wirelessNetwork.Means);
         }
 
+        public void PlotGeneratorsHistograms()
+        {
+            _wirelessNetworkView.PlotExpGeneratorHistogram(_wirelessNetwork.GeneratorsAnalyzer.ExpGeneratorHistogram);
+            _wirelessNetworkView.PlotUniformGeneratorHistogram(_wirelessNetwork.GeneratorsAnalyzer.UniformGeneratorHistogram);
+        }
     }
 }

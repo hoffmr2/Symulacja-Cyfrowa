@@ -52,28 +52,34 @@ namespace WirelessNetworkSymulationView
             this.checkBoxEnableLogger = new System.Windows.Forms.CheckBox();
             this.chartSteadyState = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.generatorsAnalyTabPage = new System.Windows.Forms.TabPage();
-            this.chartUniformGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.backgroundWorkerSimulationLoop = new System.ComponentModel.BackgroundWorker();
-            this.chartExponentialGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.labelParameters = new System.Windows.Forms.Label();
-            this.textBoxUniformGeneratorLowBound = new System.Windows.Forms.TextBox();
-            this.textBoxUniformGeneratorUpBound = new System.Windows.Forms.TextBox();
-            this.labelLowBound = new System.Windows.Forms.Label();
-            this.labelUpBound = new System.Windows.Forms.Label();
-            this.labelUniformGenerator = new System.Windows.Forms.Label();
+            this.buttonAnalyzeGenerators = new System.Windows.Forms.Button();
+            this.labelGeneratorAnalysisLambda = new System.Windows.Forms.Label();
+            this.textBoxGeneratorAnalysisLambda = new System.Windows.Forms.TextBox();
+            this.labelExpGenerator = new System.Windows.Forms.Label();
             this.labelSamplesNumber = new System.Windows.Forms.Label();
             this.labelGeneratorAnalysisSeedSet = new System.Windows.Forms.Label();
             this.textBoxSamplesNumber = new System.Windows.Forms.TextBox();
             this.textBoxGeneratorAnalysisSeedSet = new System.Windows.Forms.TextBox();
-            this.labelExpGenerator = new System.Windows.Forms.Label();
-            this.labelGeneratorAnalysisLambda = new System.Windows.Forms.Label();
-            this.textBoxGeneratorAnalysisLambda = new System.Windows.Forms.TextBox();
+            this.labelUniformGenerator = new System.Windows.Forms.Label();
+            this.labelUpBound = new System.Windows.Forms.Label();
+            this.labelLowBound = new System.Windows.Forms.Label();
+            this.textBoxUniformGeneratorUpBound = new System.Windows.Forms.TextBox();
+            this.textBoxUniformGeneratorLowBound = new System.Windows.Forms.TextBox();
+            this.labelParameters = new System.Windows.Forms.Label();
+            this.chartExponentialGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chartUniformGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.backgroundWorkerSimulationLoop = new System.ComponentModel.BackgroundWorker();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl.SuspendLayout();
             this.singleRun.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartSteadyState)).BeginInit();
             this.generatorsAnalyTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartUniformGeneratorAnalysis)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartExponentialGeneratorAnalysis)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartUniformGeneratorAnalysis)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -232,6 +238,8 @@ namespace WirelessNetworkSymulationView
             // 
             // generatorsAnalyTabPage
             // 
+            this.generatorsAnalyTabPage.Controls.Add(this.splitContainer1);
+            this.generatorsAnalyTabPage.Controls.Add(this.buttonAnalyzeGenerators);
             this.generatorsAnalyTabPage.Controls.Add(this.labelGeneratorAnalysisLambda);
             this.generatorsAnalyTabPage.Controls.Add(this.textBoxGeneratorAnalysisLambda);
             this.generatorsAnalyTabPage.Controls.Add(this.labelExpGenerator);
@@ -245,8 +253,6 @@ namespace WirelessNetworkSymulationView
             this.generatorsAnalyTabPage.Controls.Add(this.textBoxUniformGeneratorUpBound);
             this.generatorsAnalyTabPage.Controls.Add(this.textBoxUniformGeneratorLowBound);
             this.generatorsAnalyTabPage.Controls.Add(this.labelParameters);
-            this.generatorsAnalyTabPage.Controls.Add(this.chartExponentialGeneratorAnalysis);
-            this.generatorsAnalyTabPage.Controls.Add(this.chartUniformGeneratorAnalysis);
             this.generatorsAnalyTabPage.Location = new System.Drawing.Point(4, 22);
             this.generatorsAnalyTabPage.Name = "generatorsAnalyTabPage";
             this.generatorsAnalyTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -255,22 +261,177 @@ namespace WirelessNetworkSymulationView
             this.generatorsAnalyTabPage.Text = "Random Generators analysis";
             this.generatorsAnalyTabPage.UseVisualStyleBackColor = true;
             // 
+            // buttonAnalyzeGenerators
+            // 
+            this.buttonAnalyzeGenerators.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAnalyzeGenerators.Location = new System.Drawing.Point(554, 176);
+            this.buttonAnalyzeGenerators.Name = "buttonAnalyzeGenerators";
+            this.buttonAnalyzeGenerators.Size = new System.Drawing.Size(181, 23);
+            this.buttonAnalyzeGenerators.TabIndex = 16;
+            this.buttonAnalyzeGenerators.Text = "run analysis";
+            this.buttonAnalyzeGenerators.UseVisualStyleBackColor = true;
+            this.buttonAnalyzeGenerators.Click += new System.EventHandler(this.buttonAnalyzeGenerators_Click);
+            // 
+            // labelGeneratorAnalysisLambda
+            // 
+            this.labelGeneratorAnalysisLambda.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelGeneratorAnalysisLambda.AutoSize = true;
+            this.labelGeneratorAnalysisLambda.Location = new System.Drawing.Point(285, 205);
+            this.labelGeneratorAnalysisLambda.Name = "labelGeneratorAnalysisLambda";
+            this.labelGeneratorAnalysisLambda.Size = new System.Drawing.Size(45, 13);
+            this.labelGeneratorAnalysisLambda.TabIndex = 15;
+            this.labelGeneratorAnalysisLambda.Text = "Lambda";
+            // 
+            // textBoxGeneratorAnalysisLambda
+            // 
+            this.textBoxGeneratorAnalysisLambda.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxGeneratorAnalysisLambda.Location = new System.Drawing.Point(219, 202);
+            this.textBoxGeneratorAnalysisLambda.Name = "textBoxGeneratorAnalysisLambda";
+            this.textBoxGeneratorAnalysisLambda.Size = new System.Drawing.Size(60, 20);
+            this.textBoxGeneratorAnalysisLambda.TabIndex = 14;
+            this.textBoxGeneratorAnalysisLambda.TextChanged += new System.EventHandler(this.textBoxGeneratorAnalysisLambda_TextChanged);
+            // 
+            // labelExpGenerator
+            // 
+            this.labelExpGenerator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelExpGenerator.AutoSize = true;
+            this.labelExpGenerator.Location = new System.Drawing.Point(216, 176);
+            this.labelExpGenerator.Name = "labelExpGenerator";
+            this.labelExpGenerator.Size = new System.Drawing.Size(75, 13);
+            this.labelExpGenerator.TabIndex = 13;
+            this.labelExpGenerator.Text = "Exp Generator";
+            // 
+            // labelSamplesNumber
+            // 
+            this.labelSamplesNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelSamplesNumber.AutoSize = true;
+            this.labelSamplesNumber.Location = new System.Drawing.Point(424, 240);
+            this.labelSamplesNumber.Name = "labelSamplesNumber";
+            this.labelSamplesNumber.Size = new System.Drawing.Size(83, 13);
+            this.labelSamplesNumber.TabIndex = 12;
+            this.labelSamplesNumber.Text = "samples number";
+            // 
+            // labelGeneratorAnalysisSeedSet
+            // 
+            this.labelGeneratorAnalysisSeedSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelGeneratorAnalysisSeedSet.AutoSize = true;
+            this.labelGeneratorAnalysisSeedSet.Location = new System.Drawing.Point(424, 205);
+            this.labelGeneratorAnalysisSeedSet.Name = "labelGeneratorAnalysisSeedSet";
+            this.labelGeneratorAnalysisSeedSet.Size = new System.Drawing.Size(47, 13);
+            this.labelGeneratorAnalysisSeedSet.TabIndex = 11;
+            this.labelGeneratorAnalysisSeedSet.Text = "seed set";
+            // 
+            // textBoxSamplesNumber
+            // 
+            this.textBoxSamplesNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxSamplesNumber.Location = new System.Drawing.Point(358, 237);
+            this.textBoxSamplesNumber.Name = "textBoxSamplesNumber";
+            this.textBoxSamplesNumber.Size = new System.Drawing.Size(60, 20);
+            this.textBoxSamplesNumber.TabIndex = 10;
+            this.textBoxSamplesNumber.TextChanged += new System.EventHandler(this.textBoxSamplesNumber_TextChanged);
+            // 
+            // textBoxGeneratorAnalysisSeedSet
+            // 
+            this.textBoxGeneratorAnalysisSeedSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxGeneratorAnalysisSeedSet.Location = new System.Drawing.Point(358, 202);
+            this.textBoxGeneratorAnalysisSeedSet.Name = "textBoxGeneratorAnalysisSeedSet";
+            this.textBoxGeneratorAnalysisSeedSet.Size = new System.Drawing.Size(60, 20);
+            this.textBoxGeneratorAnalysisSeedSet.TabIndex = 9;
+            this.textBoxGeneratorAnalysisSeedSet.TextChanged += new System.EventHandler(this.textBoxGeneratorAnalysisSeedSet_TextChanged);
+            // 
+            // labelUniformGenerator
+            // 
+            this.labelUniformGenerator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelUniformGenerator.AutoSize = true;
+            this.labelUniformGenerator.Location = new System.Drawing.Point(41, 176);
+            this.labelUniformGenerator.Name = "labelUniformGenerator";
+            this.labelUniformGenerator.Size = new System.Drawing.Size(93, 13);
+            this.labelUniformGenerator.TabIndex = 8;
+            this.labelUniformGenerator.Text = "Uniform Generator";
+            // 
+            // labelUpBound
+            // 
+            this.labelUpBound.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelUpBound.AutoSize = true;
+            this.labelUpBound.Location = new System.Drawing.Point(110, 240);
+            this.labelUpBound.Name = "labelUpBound";
+            this.labelUpBound.Size = new System.Drawing.Size(52, 13);
+            this.labelUpBound.TabIndex = 7;
+            this.labelUpBound.Text = "up bound";
+            // 
+            // labelLowBound
+            // 
+            this.labelLowBound.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelLowBound.AutoSize = true;
+            this.labelLowBound.Location = new System.Drawing.Point(110, 205);
+            this.labelLowBound.Name = "labelLowBound";
+            this.labelLowBound.Size = new System.Drawing.Size(56, 13);
+            this.labelLowBound.TabIndex = 6;
+            this.labelLowBound.Text = "low bound";
+            // 
+            // textBoxUniformGeneratorUpBound
+            // 
+            this.textBoxUniformGeneratorUpBound.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxUniformGeneratorUpBound.Location = new System.Drawing.Point(44, 237);
+            this.textBoxUniformGeneratorUpBound.Name = "textBoxUniformGeneratorUpBound";
+            this.textBoxUniformGeneratorUpBound.Size = new System.Drawing.Size(60, 20);
+            this.textBoxUniformGeneratorUpBound.TabIndex = 5;
+            this.textBoxUniformGeneratorUpBound.TextChanged += new System.EventHandler(this.textBoxUniformGeneratorUpBound_TextChanged);
+            // 
+            // textBoxUniformGeneratorLowBound
+            // 
+            this.textBoxUniformGeneratorLowBound.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxUniformGeneratorLowBound.Location = new System.Drawing.Point(44, 202);
+            this.textBoxUniformGeneratorLowBound.Name = "textBoxUniformGeneratorLowBound";
+            this.textBoxUniformGeneratorLowBound.Size = new System.Drawing.Size(60, 20);
+            this.textBoxUniformGeneratorLowBound.TabIndex = 4;
+            this.textBoxUniformGeneratorLowBound.TextChanged += new System.EventHandler(this.textBoxUniformGeneratorLowBound_TextChanged);
+            // 
+            // labelParameters
+            // 
+            this.labelParameters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelParameters.AutoSize = true;
+            this.labelParameters.Location = new System.Drawing.Point(355, 176);
+            this.labelParameters.Name = "labelParameters";
+            this.labelParameters.Size = new System.Drawing.Size(63, 13);
+            this.labelParameters.TabIndex = 3;
+            this.labelParameters.Text = "Parameters:";
+            // 
+            // chartExponentialGeneratorAnalysis
+            // 
+            this.chartExponentialGeneratorAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea3.Name = "ChartArea1";
+            this.chartExponentialGeneratorAnalysis.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chartExponentialGeneratorAnalysis.Legends.Add(legend3);
+            this.chartExponentialGeneratorAnalysis.Location = new System.Drawing.Point(3, 3);
+            this.chartExponentialGeneratorAnalysis.Name = "chartExponentialGeneratorAnalysis";
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Exp generator";
+            this.chartExponentialGeneratorAnalysis.Series.Add(series3);
+            this.chartExponentialGeneratorAnalysis.Size = new System.Drawing.Size(345, 158);
+            this.chartExponentialGeneratorAnalysis.TabIndex = 2;
+            this.chartExponentialGeneratorAnalysis.Text = "chart1";
+            // 
             // chartUniformGeneratorAnalysis
             // 
             this.chartUniformGeneratorAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.chartUniformGeneratorAnalysis.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chartUniformGeneratorAnalysis.Legends.Add(legend3);
-            this.chartUniformGeneratorAnalysis.Location = new System.Drawing.Point(6, 6);
+            chartArea2.Name = "ChartArea1";
+            this.chartUniformGeneratorAnalysis.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chartUniformGeneratorAnalysis.Legends.Add(legend2);
+            this.chartUniformGeneratorAnalysis.Location = new System.Drawing.Point(6, 3);
             this.chartUniformGeneratorAnalysis.Name = "chartUniformGeneratorAnalysis";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Uniform Generator";
-            this.chartUniformGeneratorAnalysis.Series.Add(series3);
-            this.chartUniformGeneratorAnalysis.Size = new System.Drawing.Size(357, 141);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Uniform Generator";
+            this.chartUniformGeneratorAnalysis.Series.Add(series2);
+            this.chartUniformGeneratorAnalysis.Size = new System.Drawing.Size(374, 158);
             this.chartUniformGeneratorAnalysis.TabIndex = 0;
             this.chartUniformGeneratorAnalysis.Text = "chart1";
             // 
@@ -281,131 +442,24 @@ namespace WirelessNetworkSymulationView
             this.backgroundWorkerSimulationLoop.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerSimulationLoop_ProgressChanged);
             this.backgroundWorkerSimulationLoop.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSimulationLoop_RunWorkerCompleted);
             // 
-            // chartExponentialGeneratorAnalysis
+            // splitContainer1
             // 
-            this.chartExponentialGeneratorAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chartExponentialGeneratorAnalysis.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chartExponentialGeneratorAnalysis.Legends.Add(legend2);
-            this.chartExponentialGeneratorAnalysis.Location = new System.Drawing.Point(390, 6);
-            this.chartExponentialGeneratorAnalysis.Name = "chartExponentialGeneratorAnalysis";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Exp generator";
-            this.chartExponentialGeneratorAnalysis.Series.Add(series2);
-            this.chartExponentialGeneratorAnalysis.Size = new System.Drawing.Size(345, 141);
-            this.chartExponentialGeneratorAnalysis.TabIndex = 2;
-            this.chartExponentialGeneratorAnalysis.Text = "chart1";
+            this.splitContainer1.Location = new System.Drawing.Point(0, 6);
+            this.splitContainer1.Name = "splitContainer1";
             // 
-            // labelParameters
+            // splitContainer1.Panel1
             // 
-            this.labelParameters.AutoSize = true;
-            this.labelParameters.Location = new System.Drawing.Point(355, 176);
-            this.labelParameters.Name = "labelParameters";
-            this.labelParameters.Size = new System.Drawing.Size(63, 13);
-            this.labelParameters.TabIndex = 3;
-            this.labelParameters.Text = "Parameters:";
+            this.splitContainer1.Panel1.Controls.Add(this.chartUniformGeneratorAnalysis);
             // 
-            // textBoxUniformGeneratorLowBound
+            // splitContainer1.Panel2
             // 
-            this.textBoxUniformGeneratorLowBound.Location = new System.Drawing.Point(44, 202);
-            this.textBoxUniformGeneratorLowBound.Name = "textBoxUniformGeneratorLowBound";
-            this.textBoxUniformGeneratorLowBound.Size = new System.Drawing.Size(60, 20);
-            this.textBoxUniformGeneratorLowBound.TabIndex = 4;
-            // 
-            // textBoxUniformGeneratorUpBound
-            // 
-            this.textBoxUniformGeneratorUpBound.Location = new System.Drawing.Point(44, 237);
-            this.textBoxUniformGeneratorUpBound.Name = "textBoxUniformGeneratorUpBound";
-            this.textBoxUniformGeneratorUpBound.Size = new System.Drawing.Size(60, 20);
-            this.textBoxUniformGeneratorUpBound.TabIndex = 5;
-            // 
-            // labelLowBound
-            // 
-            this.labelLowBound.AutoSize = true;
-            this.labelLowBound.Location = new System.Drawing.Point(110, 205);
-            this.labelLowBound.Name = "labelLowBound";
-            this.labelLowBound.Size = new System.Drawing.Size(56, 13);
-            this.labelLowBound.TabIndex = 6;
-            this.labelLowBound.Text = "low bound";
-            // 
-            // labelUpBound
-            // 
-            this.labelUpBound.AutoSize = true;
-            this.labelUpBound.Location = new System.Drawing.Point(110, 240);
-            this.labelUpBound.Name = "labelUpBound";
-            this.labelUpBound.Size = new System.Drawing.Size(52, 13);
-            this.labelUpBound.TabIndex = 7;
-            this.labelUpBound.Text = "up bound";
-            // 
-            // labelUniformGenerator
-            // 
-            this.labelUniformGenerator.AutoSize = true;
-            this.labelUniformGenerator.Location = new System.Drawing.Point(41, 176);
-            this.labelUniformGenerator.Name = "labelUniformGenerator";
-            this.labelUniformGenerator.Size = new System.Drawing.Size(93, 13);
-            this.labelUniformGenerator.TabIndex = 8;
-            this.labelUniformGenerator.Text = "Uniform Generator";
-            // 
-            // labelSamplesNumber
-            // 
-            this.labelSamplesNumber.AutoSize = true;
-            this.labelSamplesNumber.Location = new System.Drawing.Point(424, 240);
-            this.labelSamplesNumber.Name = "labelSamplesNumber";
-            this.labelSamplesNumber.Size = new System.Drawing.Size(83, 13);
-            this.labelSamplesNumber.TabIndex = 12;
-            this.labelSamplesNumber.Text = "samples number";
-            // 
-            // labelGeneratorAnalysisSeedSet
-            // 
-            this.labelGeneratorAnalysisSeedSet.AutoSize = true;
-            this.labelGeneratorAnalysisSeedSet.Location = new System.Drawing.Point(424, 205);
-            this.labelGeneratorAnalysisSeedSet.Name = "labelGeneratorAnalysisSeedSet";
-            this.labelGeneratorAnalysisSeedSet.Size = new System.Drawing.Size(47, 13);
-            this.labelGeneratorAnalysisSeedSet.TabIndex = 11;
-            this.labelGeneratorAnalysisSeedSet.Text = "seed set";
-            // 
-            // textBoxSamplesNumber
-            // 
-            this.textBoxSamplesNumber.Location = new System.Drawing.Point(358, 237);
-            this.textBoxSamplesNumber.Name = "textBoxSamplesNumber";
-            this.textBoxSamplesNumber.Size = new System.Drawing.Size(60, 20);
-            this.textBoxSamplesNumber.TabIndex = 10;
-            // 
-            // textBoxGeneratorAnalysisSeedSet
-            // 
-            this.textBoxGeneratorAnalysisSeedSet.Location = new System.Drawing.Point(358, 202);
-            this.textBoxGeneratorAnalysisSeedSet.Name = "textBoxGeneratorAnalysisSeedSet";
-            this.textBoxGeneratorAnalysisSeedSet.Size = new System.Drawing.Size(60, 20);
-            this.textBoxGeneratorAnalysisSeedSet.TabIndex = 9;
-            // 
-            // labelExpGenerator
-            // 
-            this.labelExpGenerator.AutoSize = true;
-            this.labelExpGenerator.Location = new System.Drawing.Point(216, 176);
-            this.labelExpGenerator.Name = "labelExpGenerator";
-            this.labelExpGenerator.Size = new System.Drawing.Size(75, 13);
-            this.labelExpGenerator.TabIndex = 13;
-            this.labelExpGenerator.Text = "Exp Generator";
-            // 
-            // labelGeneratorAnalysisLambda
-            // 
-            this.labelGeneratorAnalysisLambda.AutoSize = true;
-            this.labelGeneratorAnalysisLambda.Location = new System.Drawing.Point(285, 205);
-            this.labelGeneratorAnalysisLambda.Name = "labelGeneratorAnalysisLambda";
-            this.labelGeneratorAnalysisLambda.Size = new System.Drawing.Size(45, 13);
-            this.labelGeneratorAnalysisLambda.TabIndex = 15;
-            this.labelGeneratorAnalysisLambda.Text = "Lambda";
-            // 
-            // textBoxGeneratorAnalysisLambda
-            // 
-            this.textBoxGeneratorAnalysisLambda.Location = new System.Drawing.Point(219, 202);
-            this.textBoxGeneratorAnalysisLambda.Name = "textBoxGeneratorAnalysisLambda";
-            this.textBoxGeneratorAnalysisLambda.Size = new System.Drawing.Size(60, 20);
-            this.textBoxGeneratorAnalysisLambda.TabIndex = 14;
+            this.splitContainer1.Panel2.Controls.Add(this.chartExponentialGeneratorAnalysis);
+            this.splitContainer1.Size = new System.Drawing.Size(735, 164);
+            this.splitContainer1.SplitterDistance = 383;
+            this.splitContainer1.TabIndex = 17;
             // 
             // SimulationView
             // 
@@ -422,8 +476,12 @@ namespace WirelessNetworkSymulationView
             ((System.ComponentModel.ISupportInitialize)(this.chartSteadyState)).EndInit();
             this.generatorsAnalyTabPage.ResumeLayout(false);
             this.generatorsAnalyTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartUniformGeneratorAnalysis)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartExponentialGeneratorAnalysis)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartUniformGeneratorAnalysis)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -460,5 +518,7 @@ namespace WirelessNetworkSymulationView
         private System.Windows.Forms.TextBox textBoxUniformGeneratorLowBound;
         private System.Windows.Forms.Label labelParameters;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartExponentialGeneratorAnalysis;
+        private System.Windows.Forms.Button buttonAnalyzeGenerators;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
