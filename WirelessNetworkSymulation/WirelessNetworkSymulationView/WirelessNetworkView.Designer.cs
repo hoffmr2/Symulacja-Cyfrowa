@@ -31,6 +31,9 @@ namespace WirelessNetworkSymulationView
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -48,14 +51,29 @@ namespace WirelessNetworkSymulationView
             this.textBoxSimulationTime = new System.Windows.Forms.TextBox();
             this.checkBoxEnableLogger = new System.Windows.Forms.CheckBox();
             this.chartSteadyState = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.multiRun = new System.Windows.Forms.TabPage();
-            this.chartSteadyStateAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.generatorsAnalyTabPage = new System.Windows.Forms.TabPage();
+            this.chartUniformGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.backgroundWorkerSimulationLoop = new System.ComponentModel.BackgroundWorker();
+            this.chartExponentialGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.labelParameters = new System.Windows.Forms.Label();
+            this.textBoxUniformGeneratorLowBound = new System.Windows.Forms.TextBox();
+            this.textBoxUniformGeneratorUpBound = new System.Windows.Forms.TextBox();
+            this.labelLowBound = new System.Windows.Forms.Label();
+            this.labelUpBound = new System.Windows.Forms.Label();
+            this.labelUniformGenerator = new System.Windows.Forms.Label();
+            this.labelSamplesNumber = new System.Windows.Forms.Label();
+            this.labelGeneratorAnalysisSeedSet = new System.Windows.Forms.Label();
+            this.textBoxSamplesNumber = new System.Windows.Forms.TextBox();
+            this.textBoxGeneratorAnalysisSeedSet = new System.Windows.Forms.TextBox();
+            this.labelExpGenerator = new System.Windows.Forms.Label();
+            this.labelGeneratorAnalysisLambda = new System.Windows.Forms.Label();
+            this.textBoxGeneratorAnalysisLambda = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.singleRun.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartSteadyState)).BeginInit();
-            this.multiRun.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartSteadyStateAnalysis)).BeginInit();
+            this.generatorsAnalyTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartUniformGeneratorAnalysis)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartExponentialGeneratorAnalysis)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -64,7 +82,7 @@ namespace WirelessNetworkSymulationView
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.singleRun);
-            this.tabControl.Controls.Add(this.multiRun);
+            this.tabControl.Controls.Add(this.generatorsAnalyTabPage);
             this.tabControl.Location = new System.Drawing.Point(12, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -212,32 +230,49 @@ namespace WirelessNetworkSymulationView
             this.chartSteadyState.TabIndex = 0;
             this.chartSteadyState.Text = "chart1";
             // 
-            // multiRun
+            // generatorsAnalyTabPage
             // 
-            this.multiRun.Controls.Add(this.chartSteadyStateAnalysis);
-            this.multiRun.Location = new System.Drawing.Point(4, 22);
-            this.multiRun.Name = "multiRun";
-            this.multiRun.Padding = new System.Windows.Forms.Padding(3);
-            this.multiRun.Size = new System.Drawing.Size(741, 280);
-            this.multiRun.TabIndex = 1;
-            this.multiRun.Text = "Steady state analysis";
-            this.multiRun.UseVisualStyleBackColor = true;
+            this.generatorsAnalyTabPage.Controls.Add(this.labelGeneratorAnalysisLambda);
+            this.generatorsAnalyTabPage.Controls.Add(this.textBoxGeneratorAnalysisLambda);
+            this.generatorsAnalyTabPage.Controls.Add(this.labelExpGenerator);
+            this.generatorsAnalyTabPage.Controls.Add(this.labelSamplesNumber);
+            this.generatorsAnalyTabPage.Controls.Add(this.labelGeneratorAnalysisSeedSet);
+            this.generatorsAnalyTabPage.Controls.Add(this.textBoxSamplesNumber);
+            this.generatorsAnalyTabPage.Controls.Add(this.textBoxGeneratorAnalysisSeedSet);
+            this.generatorsAnalyTabPage.Controls.Add(this.labelUniformGenerator);
+            this.generatorsAnalyTabPage.Controls.Add(this.labelUpBound);
+            this.generatorsAnalyTabPage.Controls.Add(this.labelLowBound);
+            this.generatorsAnalyTabPage.Controls.Add(this.textBoxUniformGeneratorUpBound);
+            this.generatorsAnalyTabPage.Controls.Add(this.textBoxUniformGeneratorLowBound);
+            this.generatorsAnalyTabPage.Controls.Add(this.labelParameters);
+            this.generatorsAnalyTabPage.Controls.Add(this.chartExponentialGeneratorAnalysis);
+            this.generatorsAnalyTabPage.Controls.Add(this.chartUniformGeneratorAnalysis);
+            this.generatorsAnalyTabPage.Location = new System.Drawing.Point(4, 22);
+            this.generatorsAnalyTabPage.Name = "generatorsAnalyTabPage";
+            this.generatorsAnalyTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.generatorsAnalyTabPage.Size = new System.Drawing.Size(741, 280);
+            this.generatorsAnalyTabPage.TabIndex = 1;
+            this.generatorsAnalyTabPage.Text = "Random Generators analysis";
+            this.generatorsAnalyTabPage.UseVisualStyleBackColor = true;
             // 
-            // chartSteadyStateAnalysis
+            // chartUniformGeneratorAnalysis
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartSteadyStateAnalysis.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chartSteadyStateAnalysis.Legends.Add(legend2);
-            this.chartSteadyStateAnalysis.Location = new System.Drawing.Point(6, 6);
-            this.chartSteadyStateAnalysis.Name = "chartSteadyStateAnalysis";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chartSteadyStateAnalysis.Series.Add(series2);
-            this.chartSteadyStateAnalysis.Size = new System.Drawing.Size(729, 300);
-            this.chartSteadyStateAnalysis.TabIndex = 0;
-            this.chartSteadyStateAnalysis.Text = "chart1";
+            this.chartUniformGeneratorAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea3.Name = "ChartArea1";
+            this.chartUniformGeneratorAnalysis.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chartUniformGeneratorAnalysis.Legends.Add(legend3);
+            this.chartUniformGeneratorAnalysis.Location = new System.Drawing.Point(6, 6);
+            this.chartUniformGeneratorAnalysis.Name = "chartUniformGeneratorAnalysis";
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Uniform Generator";
+            this.chartUniformGeneratorAnalysis.Series.Add(series3);
+            this.chartUniformGeneratorAnalysis.Size = new System.Drawing.Size(357, 141);
+            this.chartUniformGeneratorAnalysis.TabIndex = 0;
+            this.chartUniformGeneratorAnalysis.Text = "chart1";
             // 
             // backgroundWorkerSimulationLoop
             // 
@@ -245,6 +280,132 @@ namespace WirelessNetworkSymulationView
             this.backgroundWorkerSimulationLoop.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerSimulationLoop_DoWork);
             this.backgroundWorkerSimulationLoop.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerSimulationLoop_ProgressChanged);
             this.backgroundWorkerSimulationLoop.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSimulationLoop_RunWorkerCompleted);
+            // 
+            // chartExponentialGeneratorAnalysis
+            // 
+            this.chartExponentialGeneratorAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea2.Name = "ChartArea1";
+            this.chartExponentialGeneratorAnalysis.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chartExponentialGeneratorAnalysis.Legends.Add(legend2);
+            this.chartExponentialGeneratorAnalysis.Location = new System.Drawing.Point(390, 6);
+            this.chartExponentialGeneratorAnalysis.Name = "chartExponentialGeneratorAnalysis";
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Exp generator";
+            this.chartExponentialGeneratorAnalysis.Series.Add(series2);
+            this.chartExponentialGeneratorAnalysis.Size = new System.Drawing.Size(345, 141);
+            this.chartExponentialGeneratorAnalysis.TabIndex = 2;
+            this.chartExponentialGeneratorAnalysis.Text = "chart1";
+            // 
+            // labelParameters
+            // 
+            this.labelParameters.AutoSize = true;
+            this.labelParameters.Location = new System.Drawing.Point(355, 176);
+            this.labelParameters.Name = "labelParameters";
+            this.labelParameters.Size = new System.Drawing.Size(63, 13);
+            this.labelParameters.TabIndex = 3;
+            this.labelParameters.Text = "Parameters:";
+            // 
+            // textBoxUniformGeneratorLowBound
+            // 
+            this.textBoxUniformGeneratorLowBound.Location = new System.Drawing.Point(44, 202);
+            this.textBoxUniformGeneratorLowBound.Name = "textBoxUniformGeneratorLowBound";
+            this.textBoxUniformGeneratorLowBound.Size = new System.Drawing.Size(60, 20);
+            this.textBoxUniformGeneratorLowBound.TabIndex = 4;
+            // 
+            // textBoxUniformGeneratorUpBound
+            // 
+            this.textBoxUniformGeneratorUpBound.Location = new System.Drawing.Point(44, 237);
+            this.textBoxUniformGeneratorUpBound.Name = "textBoxUniformGeneratorUpBound";
+            this.textBoxUniformGeneratorUpBound.Size = new System.Drawing.Size(60, 20);
+            this.textBoxUniformGeneratorUpBound.TabIndex = 5;
+            // 
+            // labelLowBound
+            // 
+            this.labelLowBound.AutoSize = true;
+            this.labelLowBound.Location = new System.Drawing.Point(110, 205);
+            this.labelLowBound.Name = "labelLowBound";
+            this.labelLowBound.Size = new System.Drawing.Size(56, 13);
+            this.labelLowBound.TabIndex = 6;
+            this.labelLowBound.Text = "low bound";
+            // 
+            // labelUpBound
+            // 
+            this.labelUpBound.AutoSize = true;
+            this.labelUpBound.Location = new System.Drawing.Point(110, 240);
+            this.labelUpBound.Name = "labelUpBound";
+            this.labelUpBound.Size = new System.Drawing.Size(52, 13);
+            this.labelUpBound.TabIndex = 7;
+            this.labelUpBound.Text = "up bound";
+            // 
+            // labelUniformGenerator
+            // 
+            this.labelUniformGenerator.AutoSize = true;
+            this.labelUniformGenerator.Location = new System.Drawing.Point(41, 176);
+            this.labelUniformGenerator.Name = "labelUniformGenerator";
+            this.labelUniformGenerator.Size = new System.Drawing.Size(93, 13);
+            this.labelUniformGenerator.TabIndex = 8;
+            this.labelUniformGenerator.Text = "Uniform Generator";
+            // 
+            // labelSamplesNumber
+            // 
+            this.labelSamplesNumber.AutoSize = true;
+            this.labelSamplesNumber.Location = new System.Drawing.Point(424, 240);
+            this.labelSamplesNumber.Name = "labelSamplesNumber";
+            this.labelSamplesNumber.Size = new System.Drawing.Size(83, 13);
+            this.labelSamplesNumber.TabIndex = 12;
+            this.labelSamplesNumber.Text = "samples number";
+            // 
+            // labelGeneratorAnalysisSeedSet
+            // 
+            this.labelGeneratorAnalysisSeedSet.AutoSize = true;
+            this.labelGeneratorAnalysisSeedSet.Location = new System.Drawing.Point(424, 205);
+            this.labelGeneratorAnalysisSeedSet.Name = "labelGeneratorAnalysisSeedSet";
+            this.labelGeneratorAnalysisSeedSet.Size = new System.Drawing.Size(47, 13);
+            this.labelGeneratorAnalysisSeedSet.TabIndex = 11;
+            this.labelGeneratorAnalysisSeedSet.Text = "seed set";
+            // 
+            // textBoxSamplesNumber
+            // 
+            this.textBoxSamplesNumber.Location = new System.Drawing.Point(358, 237);
+            this.textBoxSamplesNumber.Name = "textBoxSamplesNumber";
+            this.textBoxSamplesNumber.Size = new System.Drawing.Size(60, 20);
+            this.textBoxSamplesNumber.TabIndex = 10;
+            // 
+            // textBoxGeneratorAnalysisSeedSet
+            // 
+            this.textBoxGeneratorAnalysisSeedSet.Location = new System.Drawing.Point(358, 202);
+            this.textBoxGeneratorAnalysisSeedSet.Name = "textBoxGeneratorAnalysisSeedSet";
+            this.textBoxGeneratorAnalysisSeedSet.Size = new System.Drawing.Size(60, 20);
+            this.textBoxGeneratorAnalysisSeedSet.TabIndex = 9;
+            // 
+            // labelExpGenerator
+            // 
+            this.labelExpGenerator.AutoSize = true;
+            this.labelExpGenerator.Location = new System.Drawing.Point(216, 176);
+            this.labelExpGenerator.Name = "labelExpGenerator";
+            this.labelExpGenerator.Size = new System.Drawing.Size(75, 13);
+            this.labelExpGenerator.TabIndex = 13;
+            this.labelExpGenerator.Text = "Exp Generator";
+            // 
+            // labelGeneratorAnalysisLambda
+            // 
+            this.labelGeneratorAnalysisLambda.AutoSize = true;
+            this.labelGeneratorAnalysisLambda.Location = new System.Drawing.Point(285, 205);
+            this.labelGeneratorAnalysisLambda.Name = "labelGeneratorAnalysisLambda";
+            this.labelGeneratorAnalysisLambda.Size = new System.Drawing.Size(45, 13);
+            this.labelGeneratorAnalysisLambda.TabIndex = 15;
+            this.labelGeneratorAnalysisLambda.Text = "Lambda";
+            // 
+            // textBoxGeneratorAnalysisLambda
+            // 
+            this.textBoxGeneratorAnalysisLambda.Location = new System.Drawing.Point(219, 202);
+            this.textBoxGeneratorAnalysisLambda.Name = "textBoxGeneratorAnalysisLambda";
+            this.textBoxGeneratorAnalysisLambda.Size = new System.Drawing.Size(60, 20);
+            this.textBoxGeneratorAnalysisLambda.TabIndex = 14;
             // 
             // SimulationView
             // 
@@ -259,8 +420,10 @@ namespace WirelessNetworkSymulationView
             this.singleRun.ResumeLayout(false);
             this.singleRun.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartSteadyState)).EndInit();
-            this.multiRun.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chartSteadyStateAnalysis)).EndInit();
+            this.generatorsAnalyTabPage.ResumeLayout(false);
+            this.generatorsAnalyTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartUniformGeneratorAnalysis)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartExponentialGeneratorAnalysis)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -269,7 +432,7 @@ namespace WirelessNetworkSymulationView
 
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage singleRun;
-        private System.Windows.Forms.TabPage multiRun;
+        private System.Windows.Forms.TabPage generatorsAnalyTabPage;
         private System.Windows.Forms.CheckBox checkBoxEnableLogger;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartSteadyState;
         private System.Windows.Forms.TextBox textBoxLambda;
@@ -282,6 +445,20 @@ namespace WirelessNetworkSymulationView
         private System.Windows.Forms.Button buttonSteadyStateAnalysis;
         private System.ComponentModel.BackgroundWorker backgroundWorkerSimulationLoop;
         private System.Windows.Forms.ProgressBar progressBarSimulationLoop;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chartSteadyStateAnalysis;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartUniformGeneratorAnalysis;
+        private System.Windows.Forms.Label labelGeneratorAnalysisLambda;
+        private System.Windows.Forms.TextBox textBoxGeneratorAnalysisLambda;
+        private System.Windows.Forms.Label labelExpGenerator;
+        private System.Windows.Forms.Label labelSamplesNumber;
+        private System.Windows.Forms.Label labelGeneratorAnalysisSeedSet;
+        private System.Windows.Forms.TextBox textBoxSamplesNumber;
+        private System.Windows.Forms.TextBox textBoxGeneratorAnalysisSeedSet;
+        private System.Windows.Forms.Label labelUniformGenerator;
+        private System.Windows.Forms.Label labelUpBound;
+        private System.Windows.Forms.Label labelLowBound;
+        private System.Windows.Forms.TextBox textBoxUniformGeneratorUpBound;
+        private System.Windows.Forms.TextBox textBoxUniformGeneratorLowBound;
+        private System.Windows.Forms.Label labelParameters;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartExponentialGeneratorAnalysis;
     }
 }

@@ -51,6 +51,7 @@
     <Compile Include="PackageProcessInitDelegates.cs" />
     <Compile Include="Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomGeneratorsAnalyzer.cs" />
     <Compile Include="Receiever.cs" />
     <Compile Include="SimulationRandomGenerators.cs" />
     <Compile Include="Supervisor.cs" />
