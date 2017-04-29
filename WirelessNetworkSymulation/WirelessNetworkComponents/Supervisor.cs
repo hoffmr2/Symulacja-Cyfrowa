@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -142,8 +143,16 @@ namespace WirelessNetworkComponents
             
             Run(simulationTime,seedSet,lambda,enableLogger);
 
-            times = _transmissionChannel.Times;
-            means = _transmissionChannel.Means;
+            times = new List<double>();
+            means = new List<double>();
+       
+            foreach (var d in _transmissionChannel.ErrorMeanDictionary)
+            {
+
+                means.Add(d.Value);
+                times.Add(d.Key);
+
+            }
         }
 
         public void Run(int simulationTime, double lambda, out List<double> times, out List<double> means)
@@ -152,31 +161,25 @@ namespace WirelessNetworkComponents
             times = null;
             means = new List<double>();
             times = new List<double>();
+            for (int i = 0; i < simulationTime; ++i)
+            {
+                times.Add(i);
+                means.Add(0);
+            }
             for (int i = 0; i < SimulationsNumber; ++i)
             {
                 Run(simulationTime, i, lambda, false);
-                if (i == 0)
-                {
-                    for (var j = 0; j < _transmissionChannel.Means.Count; ++j)
-                    {
-                            means.Add(_transmissionChannel.Means[j]);
-                       times.Add(_transmissionChannel.Times[j]);
-                    }
-                }
-                else
+            
                 {
                     for (var j = 0; j < means.Count; ++j)
                     {
-
                         try
                         {
-                            means[j] += _transmissionChannel.Means[j];
+                            means[j] += _transmissionChannel.ErrorMeanDictionary[(int)times[j]];
                         }
                         catch
                         {
-                         
-                        }
-                      
+                        }                   
                     }
                 }
                  
@@ -195,6 +198,7 @@ namespace WirelessNetworkComponents
 
             while (_mainClock < _simulationTime)
             {
+                
                 if (_mainClock % 10 == 0)
                 {
                     if (_worker != null)
@@ -204,10 +208,10 @@ namespace WirelessNetworkComponents
                     }
                 
                 }
-                if (_transmissionChannel.Times.Contains(_mainClock) == false)
+                
+                if (_transmissionChannel.ErrorMeanDictionary.ContainsKey(_mainClock) == false)
                 {
-                    _transmissionChannel.Times.Add(_mainClock);
-                    _transmissionChannel.Means.Add(_transmissionChannel.ErrorMean);
+                    _transmissionChannel.ErrorMeanDictionary.Add(_mainClock,_transmissionChannel.ErrorMean);
                 }
                 Debug.Assert(_processes.Count != 0);
                 var current = _processes.ElementAt(0);
@@ -294,8 +298,10 @@ namespace WirelessNetworkComponents
                 mean += receiever.ErrorMean;
             }
             mean /= _receievers.Length;
+            log.Logger.Repository.Threshold = Level.All;
            log.Info("number of transmissions: " + mean);
-           log.Info("number of  transmissions: " + _processesNumber);
+           log.Info("number of  transmissions: " + _transmissionChannel.TotalTransmissions);
+            log.Info("number of  processes: " + _processes.Count);
         }
     }
 }

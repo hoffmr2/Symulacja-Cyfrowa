@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using WirelessNetworkSymulationController;
 
 namespace WirelessNetworkSymulationView
@@ -67,6 +68,7 @@ namespace WirelessNetworkSymulationView
             {
                 chartSteadyState.Series["error mean"].Points.AddXY(times[i], means[i]);
             }
+            chartSteadyState.DataManipulator.FinancialFormula(FinancialFormula.MovingAverage, "7","error mean","error mean");
          //   chartSteadyState.DataBind();
             
         }

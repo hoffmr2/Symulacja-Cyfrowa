@@ -1,9 +1,9 @@
 // RandomGenerators.h
 
 #pragma once
-#include "generator.h"
-#include "generator.cpp"
 
+class UniformGenerator;
+class ExpGenerator;
 using namespace System;
 
 namespace RandomGenerators {

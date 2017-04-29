@@ -15,16 +15,14 @@ namespace WirelessNetworkComponents
         private int _failedTransmissions;
         private int _succesTransmissions;
         private int _totalTransmissions;
-        private List<double> _times;
-        private List<double> _means;
+        private SortedDictionary<int, double> _errorMeanDictionary;
 
 
         public TransmissionChannel()
         {
             _packageProcessesinChannel = new List<PackageProcess>();
             IsFree = true;
-            _times = new List<double>();
-            _means = new List<double>();
+            _errorMeanDictionary = new SortedDictionary<int, double>();
         }
 
         public bool IsFree
@@ -33,22 +31,24 @@ namespace WirelessNetworkComponents
             set { _isFree = value; }
         }
 
-        public List<double> Means
-        {
-            get { return _means; }
-            set { _means = value; }
-        }
-
-        public List<double> Times
-        {
-            get { return _times; }
-            set { _times = value; }
-        }
 
         public double ErrorMean
         {
             get { return _failedTransmissions / (double)_totalTransmissions; }
         }
+
+        public int TotalTransmissions
+        {
+            get { return _totalTransmissions; }
+            set { _totalTransmissions = value; }
+        }
+
+        public SortedDictionary<int, double> ErrorMeanDictionary
+        {
+            get { return _errorMeanDictionary; }
+            set { _errorMeanDictionary = value; }
+        }
+
         public void Collision()
         {
             foreach (var packageProcess in _packageProcessesinChannel)
@@ -145,8 +145,7 @@ namespace WirelessNetworkComponents
 
         private void ResetStats()
         {
-            _means.Clear();
-            _times.Clear();
+            _errorMeanDictionary.Clear();
             _failedTransmissions = 0;
             _succesTransmissions = 0;
             _totalTransmissions = 0;

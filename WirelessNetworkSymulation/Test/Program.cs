@@ -25,15 +25,16 @@ namespace Test
           
 
         XmlConfigurator.Configure(new FileInfo(ConfigurationSettings.AppSettings["log4net-config-file"]));           // BasicConfigurator.Configure();
-
-            Supervisor supervisor = new Supervisor(100,null);
-            supervisor.Run(2000000, 0, 1,false);
+            GenerateSeeds();
+            Supervisor supervisor = new Supervisor(4,null);
+            supervisor.Run(1000, 0, 2.3,false);
         }
 
         private static void GenerateSeeds()
         {
             int seedsNumber = 150;
             int seedsInLine = 3;
+            int seedsDistance = 10000;
             UniformRandomGenerator uniformRandomGenerator = new UniformRandomGenerator(1);
             var file = new StreamWriter("seeds.txt");
 
@@ -42,7 +43,8 @@ namespace Test
                 var line = string.Empty;
                 for (var j = 0; j < seedsInLine; ++j)
                 {
-                    uniformRandomGenerator.Rand();
+                    for(int k=0;k<seedsDistance;++k)
+                        uniformRandomGenerator.Rand();
                     line += uniformRandomGenerator.GetKernel().ToString() + ":";
                 }
                 file.WriteLine(line);

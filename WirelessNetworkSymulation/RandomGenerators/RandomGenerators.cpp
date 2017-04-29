@@ -1,6 +1,7 @@
 // This is the main DLL file.
 
 #include "stdafx.h"
+#include "generator.h"
 
 #include "RandomGenerators.h"
 #include <assert.h>
