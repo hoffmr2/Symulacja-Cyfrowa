@@ -5,8 +5,8 @@
         //all tuime atributes 10x larger
         public const int DifsTime = 20;
         public const int ChannelCheckFrequency = 5;
-        public const int ContentionWindowMin = 15;
-        public const int ContentionWindowMax = 127;
+        public const int ContentionWindowMin = 3;//15;
+        public const int ContentionWindowMax = 15;//127;
         public const int CitzTime = 10;
 
         public int DifsCounter { get; set; }

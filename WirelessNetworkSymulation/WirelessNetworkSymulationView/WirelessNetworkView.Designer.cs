@@ -31,12 +31,13 @@ namespace WirelessNetworkSymulationView
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SimulationView));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.singleRun = new System.Windows.Forms.TabPage();
@@ -52,6 +53,9 @@ namespace WirelessNetworkSymulationView
             this.checkBoxEnableLogger = new System.Windows.Forms.CheckBox();
             this.chartSteadyState = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.generatorsAnalyTabPage = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.chartUniformGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chartExponentialGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.buttonAnalyzeGenerators = new System.Windows.Forms.Button();
             this.labelGeneratorAnalysisLambda = new System.Windows.Forms.Label();
             this.textBoxGeneratorAnalysisLambda = new System.Windows.Forms.TextBox();
@@ -66,20 +70,18 @@ namespace WirelessNetworkSymulationView
             this.textBoxUniformGeneratorUpBound = new System.Windows.Forms.TextBox();
             this.textBoxUniformGeneratorLowBound = new System.Windows.Forms.TextBox();
             this.labelParameters = new System.Windows.Forms.Label();
-            this.chartExponentialGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.chartUniformGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.backgroundWorkerSimulationLoop = new System.ComponentModel.BackgroundWorker();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.richTextBoxOutput = new System.Windows.Forms.RichTextBox();
             this.tabControl.SuspendLayout();
             this.singleRun.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartSteadyState)).BeginInit();
             this.generatorsAnalyTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartExponentialGeneratorAnalysis)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartUniformGeneratorAnalysis)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartUniformGeneratorAnalysis)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartExponentialGeneratorAnalysis)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -92,11 +94,12 @@ namespace WirelessNetworkSymulationView
             this.tabControl.Location = new System.Drawing.Point(12, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(749, 306);
+            this.tabControl.Size = new System.Drawing.Size(842, 520);
             this.tabControl.TabIndex = 2;
             // 
             // singleRun
             // 
+            this.singleRun.Controls.Add(this.richTextBoxOutput);
             this.singleRun.Controls.Add(this.progressBarSimulationLoop);
             this.singleRun.Controls.Add(this.buttonSteadyStateAnalysis);
             this.singleRun.Controls.Add(this.buttonRun);
@@ -111,7 +114,7 @@ namespace WirelessNetworkSymulationView
             this.singleRun.Location = new System.Drawing.Point(4, 22);
             this.singleRun.Name = "singleRun";
             this.singleRun.Padding = new System.Windows.Forms.Padding(3);
-            this.singleRun.Size = new System.Drawing.Size(741, 280);
+            this.singleRun.Size = new System.Drawing.Size(834, 494);
             this.singleRun.TabIndex = 0;
             this.singleRun.Text = "Single Run";
             this.singleRun.UseVisualStyleBackColor = true;
@@ -119,16 +122,16 @@ namespace WirelessNetworkSymulationView
             // progressBarSimulationLoop
             // 
             this.progressBarSimulationLoop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.progressBarSimulationLoop.Location = new System.Drawing.Point(184, 220);
+            this.progressBarSimulationLoop.Location = new System.Drawing.Point(184, 434);
             this.progressBarSimulationLoop.MarqueeAnimationSpeed = 20;
             this.progressBarSimulationLoop.Name = "progressBarSimulationLoop";
-            this.progressBarSimulationLoop.Size = new System.Drawing.Size(527, 23);
+            this.progressBarSimulationLoop.Size = new System.Drawing.Size(406, 23);
             this.progressBarSimulationLoop.TabIndex = 10;
             // 
             // buttonSteadyStateAnalysis
             // 
             this.buttonSteadyStateAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSteadyStateAnalysis.Location = new System.Drawing.Point(19, 233);
+            this.buttonSteadyStateAnalysis.Location = new System.Drawing.Point(19, 447);
             this.buttonSteadyStateAnalysis.Name = "buttonSteadyStateAnalysis";
             this.buttonSteadyStateAnalysis.Size = new System.Drawing.Size(159, 23);
             this.buttonSteadyStateAnalysis.TabIndex = 9;
@@ -139,7 +142,7 @@ namespace WirelessNetworkSymulationView
             // buttonRun
             // 
             this.buttonRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonRun.Location = new System.Drawing.Point(19, 204);
+            this.buttonRun.Location = new System.Drawing.Point(19, 418);
             this.buttonRun.Name = "buttonRun";
             this.buttonRun.Size = new System.Drawing.Size(159, 23);
             this.buttonRun.TabIndex = 8;
@@ -151,7 +154,7 @@ namespace WirelessNetworkSymulationView
             // 
             this.labelSeedSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSeedSet.AutoSize = true;
-            this.labelSeedSet.Location = new System.Drawing.Point(532, 174);
+            this.labelSeedSet.Location = new System.Drawing.Point(532, 388);
             this.labelSeedSet.Name = "labelSeedSet";
             this.labelSeedSet.Size = new System.Drawing.Size(47, 13);
             this.labelSeedSet.TabIndex = 7;
@@ -161,7 +164,7 @@ namespace WirelessNetworkSymulationView
             // 
             this.labelLambda.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelLambda.AutoSize = true;
-            this.labelLambda.Location = new System.Drawing.Point(401, 174);
+            this.labelLambda.Location = new System.Drawing.Point(401, 388);
             this.labelLambda.Name = "labelLambda";
             this.labelLambda.Size = new System.Drawing.Size(41, 13);
             this.labelLambda.TabIndex = 6;
@@ -171,7 +174,7 @@ namespace WirelessNetworkSymulationView
             // 
             this.labelSimulationTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSimulationTime.AutoSize = true;
-            this.labelSimulationTime.Location = new System.Drawing.Point(214, 174);
+            this.labelSimulationTime.Location = new System.Drawing.Point(214, 388);
             this.labelSimulationTime.Name = "labelSimulationTime";
             this.labelSimulationTime.Size = new System.Drawing.Size(97, 13);
             this.labelSimulationTime.TabIndex = 5;
@@ -180,7 +183,7 @@ namespace WirelessNetworkSymulationView
             // textBoxSeedSet
             // 
             this.textBoxSeedSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxSeedSet.Location = new System.Drawing.Point(448, 171);
+            this.textBoxSeedSet.Location = new System.Drawing.Point(448, 385);
             this.textBoxSeedSet.Name = "textBoxSeedSet";
             this.textBoxSeedSet.Size = new System.Drawing.Size(78, 20);
             this.textBoxSeedSet.TabIndex = 4;
@@ -189,7 +192,7 @@ namespace WirelessNetworkSymulationView
             // textBoxLambda
             // 
             this.textBoxLambda.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxLambda.Location = new System.Drawing.Point(317, 171);
+            this.textBoxLambda.Location = new System.Drawing.Point(317, 385);
             this.textBoxLambda.Name = "textBoxLambda";
             this.textBoxLambda.Size = new System.Drawing.Size(78, 20);
             this.textBoxLambda.TabIndex = 3;
@@ -198,7 +201,7 @@ namespace WirelessNetworkSymulationView
             // textBoxSimulationTime
             // 
             this.textBoxSimulationTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxSimulationTime.Location = new System.Drawing.Point(130, 171);
+            this.textBoxSimulationTime.Location = new System.Drawing.Point(130, 385);
             this.textBoxSimulationTime.Name = "textBoxSimulationTime";
             this.textBoxSimulationTime.Size = new System.Drawing.Size(78, 20);
             this.textBoxSimulationTime.TabIndex = 2;
@@ -208,7 +211,7 @@ namespace WirelessNetworkSymulationView
             // 
             this.checkBoxEnableLogger.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxEnableLogger.AutoSize = true;
-            this.checkBoxEnableLogger.Location = new System.Drawing.Point(34, 174);
+            this.checkBoxEnableLogger.Location = new System.Drawing.Point(34, 388);
             this.checkBoxEnableLogger.Name = "checkBoxEnableLogger";
             this.checkBoxEnableLogger.Size = new System.Drawing.Size(90, 17);
             this.checkBoxEnableLogger.TabIndex = 1;
@@ -221,6 +224,8 @@ namespace WirelessNetworkSymulationView
             this.chartSteadyState.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea1.AxisX.Title = "time [ms]";
+            chartArea1.AxisY.Title = "lost packages / succes transmissions";
             chartArea1.Name = "ChartArea1";
             this.chartSteadyState.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
@@ -232,9 +237,12 @@ namespace WirelessNetworkSymulationView
             series1.Legend = "Legend1";
             series1.Name = "error mean";
             this.chartSteadyState.Series.Add(series1);
-            this.chartSteadyState.Size = new System.Drawing.Size(657, 161);
+            this.chartSteadyState.Size = new System.Drawing.Size(750, 375);
             this.chartSteadyState.TabIndex = 0;
             this.chartSteadyState.Text = "chart1";
+            title1.Name = "SteadyState";
+            title1.Text = "Average Packeges Lost";
+            this.chartSteadyState.Titles.Add(title1);
             // 
             // generatorsAnalyTabPage
             // 
@@ -260,6 +268,63 @@ namespace WirelessNetworkSymulationView
             this.generatorsAnalyTabPage.TabIndex = 1;
             this.generatorsAnalyTabPage.Text = "Random Generators analysis";
             this.generatorsAnalyTabPage.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(0, 6);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.chartUniformGeneratorAnalysis);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.chartExponentialGeneratorAnalysis);
+            this.splitContainer1.Size = new System.Drawing.Size(735, 164);
+            this.splitContainer1.SplitterDistance = 383;
+            this.splitContainer1.TabIndex = 17;
+            // 
+            // chartUniformGeneratorAnalysis
+            // 
+            this.chartUniformGeneratorAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea2.Name = "ChartArea1";
+            this.chartUniformGeneratorAnalysis.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chartUniformGeneratorAnalysis.Legends.Add(legend2);
+            this.chartUniformGeneratorAnalysis.Location = new System.Drawing.Point(6, 3);
+            this.chartUniformGeneratorAnalysis.Name = "chartUniformGeneratorAnalysis";
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Uniform Generator";
+            this.chartUniformGeneratorAnalysis.Series.Add(series2);
+            this.chartUniformGeneratorAnalysis.Size = new System.Drawing.Size(374, 158);
+            this.chartUniformGeneratorAnalysis.TabIndex = 0;
+            this.chartUniformGeneratorAnalysis.Text = "chart1";
+            // 
+            // chartExponentialGeneratorAnalysis
+            // 
+            this.chartExponentialGeneratorAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea3.Name = "ChartArea1";
+            this.chartExponentialGeneratorAnalysis.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chartExponentialGeneratorAnalysis.Legends.Add(legend3);
+            this.chartExponentialGeneratorAnalysis.Location = new System.Drawing.Point(3, 3);
+            this.chartExponentialGeneratorAnalysis.Name = "chartExponentialGeneratorAnalysis";
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Exp generator";
+            this.chartExponentialGeneratorAnalysis.Series.Add(series3);
+            this.chartExponentialGeneratorAnalysis.Size = new System.Drawing.Size(345, 158);
+            this.chartExponentialGeneratorAnalysis.TabIndex = 2;
+            this.chartExponentialGeneratorAnalysis.Text = "chart1";
             // 
             // buttonAnalyzeGenerators
             // 
@@ -397,44 +462,6 @@ namespace WirelessNetworkSymulationView
             this.labelParameters.TabIndex = 3;
             this.labelParameters.Text = "Parameters:";
             // 
-            // chartExponentialGeneratorAnalysis
-            // 
-            this.chartExponentialGeneratorAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.chartExponentialGeneratorAnalysis.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chartExponentialGeneratorAnalysis.Legends.Add(legend3);
-            this.chartExponentialGeneratorAnalysis.Location = new System.Drawing.Point(3, 3);
-            this.chartExponentialGeneratorAnalysis.Name = "chartExponentialGeneratorAnalysis";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Exp generator";
-            this.chartExponentialGeneratorAnalysis.Series.Add(series3);
-            this.chartExponentialGeneratorAnalysis.Size = new System.Drawing.Size(345, 158);
-            this.chartExponentialGeneratorAnalysis.TabIndex = 2;
-            this.chartExponentialGeneratorAnalysis.Text = "chart1";
-            // 
-            // chartUniformGeneratorAnalysis
-            // 
-            this.chartUniformGeneratorAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chartUniformGeneratorAnalysis.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chartUniformGeneratorAnalysis.Legends.Add(legend2);
-            this.chartUniformGeneratorAnalysis.Location = new System.Drawing.Point(6, 3);
-            this.chartUniformGeneratorAnalysis.Name = "chartUniformGeneratorAnalysis";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Uniform Generator";
-            this.chartUniformGeneratorAnalysis.Series.Add(series2);
-            this.chartUniformGeneratorAnalysis.Size = new System.Drawing.Size(374, 158);
-            this.chartUniformGeneratorAnalysis.TabIndex = 0;
-            this.chartUniformGeneratorAnalysis.Text = "chart1";
-            // 
             // backgroundWorkerSimulationLoop
             // 
             this.backgroundWorkerSimulationLoop.WorkerReportsProgress = true;
@@ -442,30 +469,21 @@ namespace WirelessNetworkSymulationView
             this.backgroundWorkerSimulationLoop.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerSimulationLoop_ProgressChanged);
             this.backgroundWorkerSimulationLoop.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSimulationLoop_RunWorkerCompleted);
             // 
-            // splitContainer1
+            // richTextBoxOutput
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.richTextBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(0, 6);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.chartUniformGeneratorAnalysis);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.chartExponentialGeneratorAnalysis);
-            this.splitContainer1.Size = new System.Drawing.Size(735, 164);
-            this.splitContainer1.SplitterDistance = 383;
-            this.splitContainer1.TabIndex = 17;
+            this.richTextBoxOutput.Location = new System.Drawing.Point(610, 388);
+            this.richTextBoxOutput.Name = "richTextBoxOutput";
+            this.richTextBoxOutput.Size = new System.Drawing.Size(218, 96);
+            this.richTextBoxOutput.TabIndex = 11;
+            this.richTextBoxOutput.Text = "";
             // 
             // SimulationView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(773, 330);
+            this.ClientSize = new System.Drawing.Size(866, 544);
             this.Controls.Add(this.tabControl);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SimulationView";
@@ -476,12 +494,12 @@ namespace WirelessNetworkSymulationView
             ((System.ComponentModel.ISupportInitialize)(this.chartSteadyState)).EndInit();
             this.generatorsAnalyTabPage.ResumeLayout(false);
             this.generatorsAnalyTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartExponentialGeneratorAnalysis)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartUniformGeneratorAnalysis)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartUniformGeneratorAnalysis)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartExponentialGeneratorAnalysis)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -520,5 +538,6 @@ namespace WirelessNetworkSymulationView
         private System.Windows.Forms.DataVisualization.Charting.Chart chartExponentialGeneratorAnalysis;
         private System.Windows.Forms.Button buttonAnalyzeGenerators;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.RichTextBox richTextBoxOutput;
     }
 }

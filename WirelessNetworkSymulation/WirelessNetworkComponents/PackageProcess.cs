@@ -13,6 +13,7 @@ namespace WirelessNetworkComponents
         private const int MinTransmissionTime = 10;
         private const int MaxTransmissionTime = 100;
         private static readonly ILog log = LogManager.GetLogger(typeof(PackageProcess));
+        private static TransmissionStatistics _transmissionStatistics;
         public delegate void NewProcessBornEventHandler(object sender, EventArgs e);
         public delegate void FirstPackageInQueueReadyEventHandler(object sender, EventArgs e);
         public delegate void FinalizePackageTransmissionEventHandler(object sender, EventArgs e);
@@ -39,9 +40,23 @@ namespace WirelessNetworkComponents
         private readonly int _parentTransmitterIndex;
         private readonly int _id;
         private int _sendTime;
+        private int _bornTime;
+        private int _succesReceiveTime;
         private CsmaCa _csmaCa;
 
+        static PackageProcess()
+        {
+            _transmissionStatistics = new TransmissionStatistics()
+            {
+               FailedTransmissions = 0,
+               SuccesfulTransmissions = 0,
+               Retransmissions = 0,
+               DelayTimes = new List<double>(),
+               WaitingTimes = new List<double>(),
+               AverageFailsInTime = new SortedDictionary<int, double>()
 
+            };
+        }
         public PackageProcess(PackageProcessInitDelegates initDelegates, int parenTransmitterIndex ,int globalTime, int id) : base(globalTime)
         {
             InitEventsAndDelegates(initDelegates);
@@ -49,6 +64,7 @@ namespace WirelessNetworkComponents
             _phase = (int) Phase.Born;
             _csmaCa = new CsmaCa(0,false,CsmaCa.ContentionWindowMin);
             _id = id;
+            
         }
 
                public enum  Phase 
@@ -90,6 +106,25 @@ namespace WirelessNetworkComponents
             {
                 _sendTime = value;
             }
+        }
+
+        public static TransmissionStatistics Statistics
+        {
+            get { return _transmissionStatistics; }
+            set { _transmissionStatistics = value; }
+        }
+
+
+        public int BornTime
+        {
+            get { return _bornTime; }
+            set { _bornTime = value; }
+        }
+
+        public int SuccesReceiveTime
+        {
+            get { return _succesReceiveTime; }
+            set { _succesReceiveTime = value; }
         }
 
         public void SetAckFlag(bool value)
@@ -154,6 +189,7 @@ namespace WirelessNetworkComponents
                 LogWrite(LoggerMessages.CorrectTransmissionPhase);
                 active = false;
                 _isTerminated = true;
+                ++_transmissionStatistics.SuccesfulTransmissions;
                OnFinalizePackageTransmission();
             }
             else
@@ -162,6 +198,7 @@ namespace WirelessNetworkComponents
                 {
                     LogWrite(LoggerMessages.RetransmissionPhase);
                     active = true;
+                    ++_transmissionStatistics.Retransmissions;
                     PrepareForRetransmission();
                 }
                 else
@@ -169,6 +206,7 @@ namespace WirelessNetworkComponents
                     LogWrite(LoggerMessages.AbortTransmissionPhase);
                     active = false;
                     _isTerminated = true;
+                    ++_transmissionStatistics.FailedTransmissions;
                     OnFinalizePackageTransmission();
                 }
             }
@@ -195,6 +233,7 @@ namespace WirelessNetworkComponents
         private void TransmissionInChannel(out bool active)
         {
             SendTime1 = EventTime;
+            _transmissionStatistics.WaitingTimes.Add(SendTime1 - BornTime);
             LogWrite(LoggerMessages.TransmissionInChannelPhase + " Send time: " + SendTime1);
             
             _sendFrame?.Invoke(this);
@@ -278,7 +317,7 @@ namespace WirelessNetworkComponents
         {
             OnNewProcessBorn();
            LogWrite(LoggerMessages.BronPhase);
-            
+            BornTime = EventTime;
             if (_isTransmitterBusy?.Invoke() == false)
             {
                 active = true;

@@ -56,6 +56,7 @@
     <Compile Include="SimulationRandomGenerators.cs" />
     <Compile Include="Supervisor.cs" />
     <Compile Include="TransmissionChannel.cs" />
+    <Compile Include="TransmissionStatistics.cs" />
     <Compile Include="Transmitter.cs" />
   </ItemGroup>
   <ItemGroup>

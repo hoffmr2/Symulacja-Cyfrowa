@@ -66,9 +66,10 @@ namespace WirelessNetworkSymulationView
            chartSteadyState.Series["error mean"].Points.Clear();
             for(int i=0;i< times.Count;++i)
             {
-                chartSteadyState.Series["error mean"].Points.AddXY(times[i], means[i]);
+                chartSteadyState.Series["error mean"].Points.AddXY(times[i]/10, means[i]);
             }
             chartSteadyState.DataManipulator.FinancialFormula(FinancialFormula.MovingAverage, "7","error mean","error mean");
+         
          //   chartSteadyState.DataBind();
             
         }

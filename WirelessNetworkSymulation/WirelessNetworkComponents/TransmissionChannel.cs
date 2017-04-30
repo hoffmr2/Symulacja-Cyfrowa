@@ -12,17 +12,13 @@ namespace WirelessNetworkComponents
         private List<PackageProcess> _packageProcessesinChannel;
 
         private bool _isFree;
-        private int _failedTransmissions;
-        private int _succesTransmissions;
-        private int _totalTransmissions;
-        private SortedDictionary<int, double> _errorMeanDictionary;
+
 
 
         public TransmissionChannel()
         {
             _packageProcessesinChannel = new List<PackageProcess>();
             IsFree = true;
-            _errorMeanDictionary = new SortedDictionary<int, double>();
         }
 
         public bool IsFree
@@ -32,22 +28,6 @@ namespace WirelessNetworkComponents
         }
 
 
-        public double ErrorMean
-        {
-            get { return _failedTransmissions / (double)_totalTransmissions; }
-        }
-
-        public int TotalTransmissions
-        {
-            get { return _totalTransmissions; }
-            set { _totalTransmissions = value; }
-        }
-
-        public SortedDictionary<int, double> ErrorMeanDictionary
-        {
-            get { return _errorMeanDictionary; }
-            set { _errorMeanDictionary = value; }
-        }
 
         public void Collision()
         {
@@ -111,13 +91,7 @@ namespace WirelessNetworkComponents
             if (packageProcess.IsDomaged)
             {
                 Remove(packageProcess.Id);
-                ++_failedTransmissions;
             }
-            else
-            {
-                ++_succesTransmissions;
-            }
-            _totalTransmissions = _failedTransmissions + _succesTransmissions;
           
         }
 
@@ -143,19 +117,11 @@ namespace WirelessNetworkComponents
                 }
         }
 
-        private void ResetStats()
-        {
-            _errorMeanDictionary.Clear();
-            _failedTransmissions = 0;
-            _succesTransmissions = 0;
-            _totalTransmissions = 0;
-        }
 
         public void Reset()
         {
             IsFree = true;
             _packageProcessesinChannel.Clear();
-            ResetStats();
         }
 
     }

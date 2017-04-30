@@ -12,7 +12,7 @@ namespace WirelessNetworkSymulationController
 {
     public class WirelessNetworkController
     {
-        private const int TransmittersNumber = 4;
+        private const int TransmittersNumber = 25;
 
         private IWirelessNetworkView _wirelessNetworkView;
         private WirelessNetwork _wirelessNetwork;

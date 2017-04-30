@@ -128,6 +128,7 @@ namespace WirelessNetworkComponents
             _processes.Clear();
             _transmissionChannel.Reset();
             ResetTransmitters();
+            PackageProcess.Statistics.Clear();
         }
 
         private void ResetTransmitters()
@@ -146,7 +147,7 @@ namespace WirelessNetworkComponents
             times = new List<double>();
             means = new List<double>();
        
-            foreach (var d in _transmissionChannel.ErrorMeanDictionary)
+            foreach (var d in PackageProcess.Statistics.AverageFailsInTime)
             {
 
                 means.Add(d.Value);
@@ -154,7 +155,6 @@ namespace WirelessNetworkComponents
 
             }
         }
-
         public void Run(int simulationTime, double lambda, out List<double> times, out List<double> means)
         {
             means = null;
@@ -175,7 +175,7 @@ namespace WirelessNetworkComponents
                     {
                         try
                         {
-                            means[j] += _transmissionChannel.ErrorMeanDictionary[(int)times[j]];
+                            means[j] += PackageProcess.Statistics.AverageFailsInTime[(int)times[j]];
                         }
                         catch
                         {
@@ -209,12 +209,14 @@ namespace WirelessNetworkComponents
                 
                 }
                 
-                if (_transmissionChannel.ErrorMeanDictionary.ContainsKey(_mainClock) == false)
-                {
-                    _transmissionChannel.ErrorMeanDictionary.Add(_mainClock,_transmissionChannel.ErrorMean);
-                }
+            
                 Debug.Assert(_processes.Count != 0);
                 var current = _processes.ElementAt(0);
+                
+                if (PackageProcess.Statistics.AverageFailsInTime.ContainsKey(_mainClock) == false)
+                {
+                    PackageProcess.Statistics.AverageFailsInTime.Add(_mainClock,PackageProcess.Statistics.AverageFails);
+                }
                 _processes.RemoveAt(0);
                 
                 if (current.Value.IsSleeped)
@@ -302,6 +304,19 @@ namespace WirelessNetworkComponents
            log.Info("number of transmissions: " + mean);
            log.Info("number of  transmissions: " + _transmissionChannel.TotalTransmissions);
             log.Info("number of  processes: " + _processes.Count);
+        }
+
+        private string SimulationResult()
+        {
+            StringBuilder text = new StringBuilder();
+            text.AppendLine("Number of lost packeges: " + PackageProcess.Statistics.FailedTransmissions);
+            text.AppendLine("Number of succes transmissions: " + PackageProcess.Statistics.SuccesfulTransmissions);
+            text.AppendLine("Number of retransmissions: " + PackageProcess.Statistics.Retransmissions);
+            text.AppendLine("Average delay time: " + PackageProcess.Statistics.AvarageDelayTime);
+            text.AppendLine("Average waiting time: " + PackageProcess.Statistics.AverageWaitingTimes);
+            text.AppendLine("Average lost packages: " + PackageProcess.Statistics.AverageFails);
+            return text.ToString();
+
         }
     }
 }

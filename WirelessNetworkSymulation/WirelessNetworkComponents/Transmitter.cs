@@ -65,7 +65,6 @@ namespace WirelessNetworkComponents
             if (_packageProcessesBuffor.Count != 0)
             {
                 _packageProcessesBuffor.First().Wake(first.EventTime);
-               // _isTransmittingPackage = false;
             }
             else
             {
