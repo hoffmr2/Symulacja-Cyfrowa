@@ -32,6 +32,11 @@ namespace WirelessNetworkSymulationView
 
         #region IWirelessNetworkView implementation
 
+        public void SetOutputText(string text)
+        {
+            richTextBoxOutput.Text = text;
+        }
+
         public void PlotUniformGeneratorHistogram(SortedDictionary<double, int> data)
         {
             if (data == null)
@@ -191,7 +196,7 @@ namespace WirelessNetworkSymulationView
         {
             _wirelessNetworkController.Plot();
             _wirelessNetworkController.PlotGeneratorsHistograms();
-
+            _wirelessNetworkController.SetOutputText();
             EnableControls();
 
         }

@@ -12,7 +12,7 @@ namespace WirelessNetworkSymulationController
 {
     public class WirelessNetworkController
     {
-        private const int TransmittersNumber = 25;
+        private const int TransmittersNumber = 45;
 
         private IWirelessNetworkView _wirelessNetworkView;
         private WirelessNetwork _wirelessNetwork;
@@ -134,6 +134,11 @@ namespace WirelessNetworkSymulationController
             {
 
             }
+        }
+
+        public void SetOutputText()
+        {
+            _wirelessNetworkView.SetOutputText(_wirelessNetwork.SimulationOutput);
         }
 
         public void SetEnableLogger(bool state)

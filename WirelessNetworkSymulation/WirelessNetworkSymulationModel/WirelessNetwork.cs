@@ -20,6 +20,7 @@ namespace WirelessNetworkSymulationModel
         private bool _enableLogger;
         private List<double> _times;
         private List<double> _means;
+        private string _simulationOutput;
 
 
         public WirelessNetwork(int transmittersNumber, BackgroundWorker worker)
@@ -74,14 +75,20 @@ namespace WirelessNetworkSymulationModel
             set { _randomGeneratorsAnalyzer = value; }
         }
 
+        public string SimulationOutput
+        {
+            get { return _simulationOutput; }
+            set { _simulationOutput = value; }
+        }
+
         public void Run()
         {
-            _supervisor.Run(SimulationTime,SeedSet,Lambda,_enableLogger,out _times,out _means);
+            _supervisor.Run(SimulationTime,SeedSet,Lambda,_enableLogger,out _times,out _means,out _simulationOutput);
         }
 
         public void SteadyStateAnalysis()
         {
-            _supervisor.Run(SimulationTime, Lambda, out _times, out _means);
+            _supervisor.Run(SimulationTime, Lambda, out _times, out _means,out _simulationOutput);
         }
 
         public bool ValidateSimulationParameters()

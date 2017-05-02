@@ -190,6 +190,7 @@ namespace WirelessNetworkComponents
                 active = false;
                 _isTerminated = true;
                 ++_transmissionStatistics.SuccesfulTransmissions;
+                Statistics.DelayTimes.Add( EventTime- BornTime);
                OnFinalizePackageTransmission();
             }
             else
@@ -235,7 +236,7 @@ namespace WirelessNetworkComponents
             SendTime1 = EventTime;
             _transmissionStatistics.WaitingTimes.Add(SendTime1 - BornTime);
             LogWrite(LoggerMessages.TransmissionInChannelPhase + " Send time: " + SendTime1);
-            
+            Statistics.WaitingTimes.Add(SendTime1-BornTime);
             _sendFrame?.Invoke(this);
             active = false;
             SetTransmissionTime();

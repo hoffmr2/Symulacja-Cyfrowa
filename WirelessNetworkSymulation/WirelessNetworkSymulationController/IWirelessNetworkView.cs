@@ -17,6 +17,8 @@ namespace WirelessNetworkSymulationController
 
         void PlotExpGeneratorHistogram(SortedDictionary<double, int> data);
 
+        void SetOutputText(string text);
+
         BackgroundWorker GetBackgroundWorker();
 
         void DisableControls();

@@ -43,6 +43,7 @@ namespace WirelessNetworkComponents
             _mainClock = 0;
             _processesNumber = 0;
             _transmissionChannel = new TransmissionChannel();
+            GenerateSeeds(transmitterNumber);
             InitTransmittersAndReceievers();
         }
 
@@ -68,6 +69,10 @@ namespace WirelessNetworkComponents
 
         private void InitGenerators(int seedSet,double lambda)
         {
+            _simulationRandomGenerators.BackofftimerValue = new List<UniformRandomGenerator>();
+            _simulationRandomGenerators.GenerationTime = new List<ExponentialRandomGenerator>();
+            _simulationRandomGenerators.TransmissionTime = new List<UniformRandomGenerator>();
+
             var file = new StreamReader("seeds.txt");
             var line = file.ReadToEnd();
             var lines = line.Split('\n');
@@ -76,10 +81,14 @@ namespace WirelessNetworkComponents
 
             try
             {
-                _simulationRandomGenerators.BackofftimerValue = new UniformRandomGenerator(int.Parse(seeds[0]));
-                _simulationRandomGenerators.GenerationTime = new ExponentialRandomGenerator(lambda,int.Parse(seeds[1]));
-                _simulationRandomGenerators.TransmissionTime = new UniformRandomGenerator(int.Parse(seeds[2]));
+                for (int i = 0; i < TransmittersNumber; i++)
+                {
 
+                        _simulationRandomGenerators.BackofftimerValue.Add( new UniformRandomGenerator(int.Parse(seeds[3*i + 0])));
+                        _simulationRandomGenerators.GenerationTime.Add( new ExponentialRandomGenerator(lambda,int.Parse(seeds[3*i+1])));
+                        _simulationRandomGenerators.TransmissionTime.Add( new UniformRandomGenerator(int.Parse(seeds[3*i+2])));
+                    
+                }
             }
             catch 
             {
@@ -139,11 +148,12 @@ namespace WirelessNetworkComponents
             }
         }
 
-        public void Run(int simulationTime, int seedSet, double lambda, bool enableLogger,out List<double> times, out List<double> means)
+        public void Run(int simulationTime, int seedSet, double lambda, bool enableLogger,out List<double> times, out List<double> means, out string outputData)
         {
             
             Run(simulationTime,seedSet,lambda,enableLogger);
-
+            times = null;
+            means = null;
             times = new List<double>();
             means = new List<double>();
        
@@ -154,8 +164,9 @@ namespace WirelessNetworkComponents
                 times.Add(d.Key);
 
             }
+            outputData = SimulationResult();
         }
-        public void Run(int simulationTime, double lambda, out List<double> times, out List<double> means)
+        public void Run(int simulationTime, double lambda, out List<double> times, out List<double> means,out string outputData)
         {
             means = null;
             times = null;
@@ -188,6 +199,7 @@ namespace WirelessNetworkComponents
             {
                 means[j] /= (double)SimulationsNumber;
             }
+            outputData = SimulationResult();
         }
 
         private void SimulationLoop()
@@ -236,6 +248,28 @@ namespace WirelessNetworkComponents
 
         }
 
+        private static void GenerateSeeds(int transmittersNumber)
+        {
+            int seedsNumber = 150;
+            int seedsInLine = 3*transmittersNumber;
+            int seedsDistance = 10000;
+            UniformRandomGenerator uniformRandomGenerator = new UniformRandomGenerator(1);
+            var file = new StreamWriter("seeds.txt");
+
+            for (var i = 0; i < seedsNumber; ++i)
+            {
+                var line = string.Empty;
+                for (var j = 0; j < seedsInLine; ++j)
+                {
+                    for (int k = 0; k < seedsDistance; ++k)
+                        uniformRandomGenerator.Rand();
+                    line += uniformRandomGenerator.GetKernel().ToString() + ":";
+                }
+                file.WriteLine(line);
+            }
+            file.Close();
+        }
+
         public void OnNewProcessBron(object sender,EventArgs e)
         {
             var packageProcess = sender as PackageProcess;
@@ -265,7 +299,7 @@ namespace WirelessNetworkComponents
             ++_processesNumber;
             var constructorParams = CreatePackageDelegateInitStruct(index);
             var tmPackageProcess = new PackageProcess(constructorParams,index,MainClock,_processesNumber);
-            var time = _simulationRandomGenerators.GenerationTime.Rand();
+            var time = _simulationRandomGenerators.GenerationTime[index].Rand();
             tmPackageProcess.Activate((int)(time*10));
             _processes.Add(tmPackageProcess.EventTime, tmPackageProcess);
         }
@@ -284,8 +318,8 @@ namespace WirelessNetworkComponents
                 OnNewProcessBornSupervisor = OnNewProcessBron,
                 OnNewProcessBornTransmitter = _transmitters[index].OnNewProcessBorn,
                 SendFrame = _transmissionChannel.SendFrame,
-                DrawBackoffTimer = _simulationRandomGenerators.BackofftimerValue.Rand,
-                DrawTransmissionTime = _simulationRandomGenerators.TransmissionTime.Rand
+                DrawBackoffTimer = _simulationRandomGenerators.BackofftimerValue[index].Rand,
+                DrawTransmissionTime = _simulationRandomGenerators.TransmissionTime[index].Rand
             };
             return constructorParams;
         }
@@ -302,7 +336,6 @@ namespace WirelessNetworkComponents
             mean /= _receievers.Length;
             log.Logger.Repository.Threshold = Level.All;
            log.Info("number of transmissions: " + mean);
-           log.Info("number of  transmissions: " + _transmissionChannel.TotalTransmissions);
             log.Info("number of  processes: " + _processes.Count);
         }
 

@@ -10,8 +10,8 @@ namespace WirelessNetworkComponents
    
     public struct SimulationRandomGenerators
     {
-        public UniformRandomGenerator TransmissionTime;//CTPk
-        public UniformRandomGenerator BackofftimerValue; //BT
-        public ExponentialRandomGenerator GenerationTime; //CGPk
+        public List< UniformRandomGenerator> TransmissionTime;//CTPk
+        public List<UniformRandomGenerator> BackofftimerValue; //BT
+        public List<ExponentialRandomGenerator> GenerationTime; //CGPk
     }
 }
