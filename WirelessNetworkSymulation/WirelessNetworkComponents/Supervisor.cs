@@ -252,7 +252,7 @@ namespace WirelessNetworkComponents
         {
             int seedsNumber = 150;
             int seedsInLine = 3*transmittersNumber;
-            int seedsDistance = 10000;
+            int seedsDistance = 100000;
             UniformRandomGenerator uniformRandomGenerator = new UniformRandomGenerator(1);
             var file = new StreamWriter("seeds.txt");
 
