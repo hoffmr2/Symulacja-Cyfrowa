@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,12 +16,19 @@ namespace WirelessNetworkSymulationModel
         private Supervisor _supervisor;
         private RandomGeneratorsAnalyzer _randomGeneratorsAnalyzer;
         private int _simulationTime;
+        private int _maxTransmissions;
         private int _seedSet;
         private double _lambda;
+        private double _startLambda;
+        private double _endLambda;
         private bool _enableLogger;
         private List<double> _times;
         private List<double> _means;
+        private List<double> _xValuesLambdaAnalysis;
+        private List<SimulationResults> _yValuesLambdaAnalysis;
+        private DataTable _mainSimulationResults;
         private string _simulationOutput;
+        private string _excelOutPath;
 
 
         public WirelessNetwork(int transmittersNumber, BackgroundWorker worker)
@@ -81,14 +89,66 @@ namespace WirelessNetworkSymulationModel
             set { _simulationOutput = value; }
         }
 
+        public int MaxTransmissions
+        {
+            get { return _maxTransmissions; }
+            set { _maxTransmissions = value; }
+        }
+
+        public double StartLambda
+        {
+            get { return _startLambda; }
+            set { _startLambda = value; }
+        }
+
+        public double EndLambda
+        {
+            get { return _endLambda; }
+            set { _endLambda = value; }
+        }
+
+        public List<double> XValuesLambdaAnalysis
+        {
+            get { return _xValuesLambdaAnalysis; }
+            set { _xValuesLambdaAnalysis = value; }
+        }
+
+        public List<SimulationResults> YValuesLambdaAnalysis
+        {
+            get { return _yValuesLambdaAnalysis; }
+            set { _yValuesLambdaAnalysis = value; }
+        }
+
+        public DataTable MainSimulationResults
+        {
+            get { return _mainSimulationResults; }
+            set { _mainSimulationResults = value; }
+        }
+
+        public string ExcelOutPath
+        {
+            get { return _excelOutPath; }
+            set { _excelOutPath = value; }
+        }
+
         public void Run()
         {
-            _supervisor.Run(SimulationTime,SeedSet,Lambda,_enableLogger,out _times,out _means,out _simulationOutput);
+            _supervisor.Run(SimulationTime,SeedSet,Lambda,MaxTransmissions, _enableLogger,out _times,out _means,out _simulationOutput);
         }
 
         public void SteadyStateAnalysis()
         {
-            _supervisor.Run(SimulationTime, Lambda, out _times, out _means,out _simulationOutput);
+            _supervisor.Run(SimulationTime, Lambda,MaxTransmissions, out _times, out _means,out _simulationOutput);
+        }
+
+        public void LambdaAnalysis()
+        {
+            _supervisor.Run(StartLambda, EndLambda, out _xValuesLambdaAnalysis, out _yValuesLambdaAnalysis);
+        }
+
+        public void MainSimulation()
+        {
+            _supervisor.Run(Lambda, out _mainSimulationResults);
         }
 
         public bool ValidateSimulationParameters()
@@ -97,9 +157,23 @@ namespace WirelessNetworkSymulationModel
                 return false;
             if(Lambda <= 0)
                 return false;
-            if(_seedSet <= 0 && _seedSet > MaxSeedSetIndex)
+            if (MaxTransmissions <= 0)
+                return false;
+            if (_seedSet <= 0 && _seedSet > MaxSeedSetIndex)
                 return false;
             return true;
         }
+
+        public bool ValidateLambdaAnalysisParameters()
+        {
+            if (StartLambda <= 0)
+                return false;
+            if (EndLambda <= 0)
+                return false;
+            if (StartLambda >= EndLambda)
+                return false;
+            return true;
+        }
+
     }
 }

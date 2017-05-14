@@ -12,7 +12,7 @@ namespace WirelessNetworkSymulationController
 {
     public class WirelessNetworkController
     {
-        private const int TransmittersNumber = 25;
+        private const int TransmittersNumber = 20;
 
         private IWirelessNetworkView _wirelessNetworkView;
         private WirelessNetwork _wirelessNetwork;
@@ -38,6 +38,20 @@ namespace WirelessNetworkSymulationController
             }
         }
 
+        public void SetMaxTransmissions(string transmissions)
+        {
+            try
+            {
+                var transmissionsValue = int.Parse(transmissions);
+                transmissionsValue = Math.Abs(transmissionsValue);
+                _wirelessNetwork.MaxTransmissions = transmissionsValue;
+            }
+            catch
+            {
+
+            }
+        }
+
         public void SetLambda(string lambda)
         {
             try
@@ -45,6 +59,34 @@ namespace WirelessNetworkSymulationController
                 var lambdaValue = double.Parse(lambda);
                 lambdaValue = Math.Abs(lambdaValue);
                _wirelessNetwork.Lambda = lambdaValue;
+            }
+            catch
+            {
+
+            }
+        }
+
+        public void SetStartLambda(string lambda)
+        {
+            try
+            {
+                var lambdaValue = double.Parse(lambda);
+                lambdaValue = Math.Abs(lambdaValue);
+                _wirelessNetwork.StartLambda = lambdaValue;
+            }
+            catch
+            {
+
+            }
+        }
+
+        public void SetEndLambda(string lambda)
+        {
+            try
+            {
+                var lambdaValue = double.Parse(lambda);
+                lambdaValue = Math.Abs(lambdaValue);
+                _wirelessNetwork.EndLambda = lambdaValue;
             }
             catch
             {
@@ -166,6 +208,28 @@ namespace WirelessNetworkSymulationController
             }
         }
 
+
+        public void LambdaAnalysis()
+        {
+            if (_wirelessNetwork.ValidateLambdaAnalysisParameters())
+                _wirelessNetwork.LambdaAnalysis();
+            else
+            {
+                MessageBox.Show("error", "Wrong Simulation Parameters", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        public void MainSimulation()
+        {
+            _wirelessNetwork.MainSimulation();
+            _wirelessNetwork.MainSimulationResults.ExportToExcel(_wirelessNetwork.ExcelOutPath);
+        }
+
+        public void SetExcelOutPath(string path)
+        {
+            _wirelessNetwork.ExcelOutPath = path;
+        }
+
         public void RandomGeneratorsAnalysis()
         {
             if (_wirelessNetwork.GeneratorsAnalyzer.IsInitialized())
@@ -178,7 +242,12 @@ namespace WirelessNetworkSymulationController
 
         public void Plot()
         {
-            _wirelessNetworkView.PlotSteadyState(_wirelessNetwork.Times, _wirelessNetwork.Means);
+            StringBuilder text = new StringBuilder();
+            text.Append("lambda");
+            text.Append(_wirelessNetwork.Lambda);
+            text.Replace(',', '.');
+            
+            _wirelessNetworkView.PlotSteadyState(_wirelessNetwork.Times, _wirelessNetwork.Means,text.ToString());
         }
 
         public void PlotGeneratorsHistograms()
@@ -186,5 +255,13 @@ namespace WirelessNetworkSymulationController
             _wirelessNetworkView.PlotExpGeneratorHistogram(_wirelessNetwork.GeneratorsAnalyzer.ExpGeneratorHistogram);
             _wirelessNetworkView.PlotUniformGeneratorHistogram(_wirelessNetwork.GeneratorsAnalyzer.UniformGeneratorHistogram);
         }
+
+        public void PlotLambdaAnalysis()
+        {
+            _wirelessNetworkView.PlotLambda(_wirelessNetwork.XValuesLambdaAnalysis,_wirelessNetwork.YValuesLambdaAnalysis);
+        }
+
+
+
     }
 }

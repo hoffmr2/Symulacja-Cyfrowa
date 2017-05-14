@@ -7,11 +7,13 @@ using System.Collections;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Configuration;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
 using System.Xml.Linq;
 using RandomGenerators;
+using System.Web;
 
 using log4net;
 using log4net.Config;
@@ -19,14 +21,55 @@ using log4net.Core;
 
 namespace WirelessNetworkComponents
 {
-    public class Supervisor
+    public struct SimulationResults
+    {
+        private double _lostPackagesMean;
+        private double _errorUpBound;
+        private double _errorLowBound;
+        private double _flow;
+        private double _maxLostPackagesRatio;
+
+        public double LostPackagesMean
+        {
+            get { return _lostPackagesMean; }
+            set { _lostPackagesMean = value; }
+        }
+
+        public double ErrorUpBound
+        {
+            get { return _errorUpBound; }
+            set { _errorUpBound = value; }
+        }
+
+        public double ErrorLowBound
+        {
+            get { return _errorLowBound; }
+            set { _errorLowBound = value; }
+        }
+
+        public double Flow
+        {
+            get { return _flow; }
+            set { _flow = value; }
+        }
+
+        public double MaxLostPackagesRatio
+        {
+            get { return _maxLostPackagesRatio; }
+            set { _maxLostPackagesRatio = value; }
+        }
+    };
+
+public class Supervisor
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Supervisor));
         private const int SimulationsNumber = 15;
+
         private int TransmittersNumber; //K = 4
         private int _mainClock; //time 10*ms
         private int _simulationTime;
         private int _processesNumber;
+        private int _maxTransmissions;
         private SortedList<int,Process> _processes;
         private Transmitter[] _transmitters;
         private Receiever[] _receievers;
@@ -43,7 +86,7 @@ namespace WirelessNetworkComponents
             _mainClock = 0;
             _processesNumber = 0;
             _transmissionChannel = new TransmissionChannel();
-            GenerateSeeds(transmitterNumber);
+          // GenerateSeeds(transmitterNumber);
             InitTransmittersAndReceievers();
         }
 
@@ -64,6 +107,12 @@ namespace WirelessNetworkComponents
             {
                 _simulationTime = value;
             }
+        }
+
+        public int MaxTransmissions
+        {
+            get { return _maxTransmissions; }
+            set { _maxTransmissions = value; }
         }
 
 
@@ -108,10 +157,11 @@ namespace WirelessNetworkComponents
             }
         }
 
-        public void Run(int simulationTime, int seedSet, double lambda,bool enableLogger )
+        public void Run(int simulationTime, int seedSet, double lambda,int maxTransmissions,bool enableLogger )
         {
             SetLogging(enableLogger);
             _simulationTime = simulationTime;
+            _maxTransmissions = maxTransmissions;
             _mainClock = 0;
             _processesNumber = 0;
             InitGenerators(seedSet, lambda);
@@ -148,10 +198,10 @@ namespace WirelessNetworkComponents
             }
         }
 
-        public void Run(int simulationTime, int seedSet, double lambda, bool enableLogger,out List<double> times, out List<double> means, out string outputData)
+        public void Run(int simulationTime, int seedSet, double lambda, int maxTransmissions, bool enableLogger,out List<double> times, out List<double> means, out string outputData)
         {
-            
-            Run(simulationTime,seedSet,lambda,enableLogger);
+            TransmissionStatistics.EndOfTransientPhase = 0;
+            Run(simulationTime,seedSet,lambda,maxTransmissions,enableLogger);
             times = null;
             means = null;
             times = new List<double>();
@@ -166,27 +216,28 @@ namespace WirelessNetworkComponents
             }
             outputData = SimulationResult();
         }
-        public void Run(int simulationTime, double lambda, out List<double> times, out List<double> means,out string outputData)
+        public void Run(int simulationTime, double lambda, int maxTransmissions, out List<double> times, out List<double> means,out string outputData)
         {
+            TransmissionStatistics.EndOfTransientPhase = 0;
             means = null;
             times = null;
             means = new List<double>();
             times = new List<double>();
-            for (int i = 0; i < simulationTime; ++i)
+            for (int i = 0; i < maxTransmissions; ++i)
             {
                 times.Add(i);
                 means.Add(0);
             }
             for (int i = 0; i < SimulationsNumber; ++i)
             {
-                Run(simulationTime, i, lambda, false);
+                Run(simulationTime, i, lambda,maxTransmissions, false);
             
                 {
-                    for (var j = 0; j < means.Count; ++j)
+                    for (var j = 0; j <MaxTransmissions; ++j)
                     {
                         try
                         {
-                            means[j] += PackageProcess.Statistics.AverageFailsInTime[(int)times[j]];
+                            means[j] += PackageProcess.Statistics.AverageRetransmissions[j];
                         }
                         catch
                         {
@@ -202,13 +253,171 @@ namespace WirelessNetworkComponents
             outputData = SimulationResult();
         }
 
+
+        private void Run(double lambda,out SimulationResults simulationResults )
+        {
+            TransmissionStatistics.EndOfTransientPhase = 250;
+            var maxTransmissions = 3000;
+            var simulationTime = 1000000;
+            var lostPackagesList = new List<double>();
+
+            simulationResults = new SimulationResults()
+            {
+                LostPackagesMean = 0,
+                ErrorLowBound = 0,
+                ErrorUpBound = 0,
+                Flow = 0,
+                MaxLostPackagesRatio = 0
+               
+            };
+
+            for (int i = 0; i < SimulationsNumber; ++i)
+            {
+                Run(simulationTime, i, lambda, maxTransmissions, false);
+                lostPackagesList.Add(PackageProcess.Statistics.AverageFails);
+                simulationResults.MaxLostPackagesRatio += PackageProcess.Statistics.MaxFailsRatio();
+                var allTransmissions = (PackageProcess.Statistics.SuccesfulTransmissions +
+                                        PackageProcess.Statistics.FailedTransmissions);
+                simulationResults.Flow += (double) allTransmissions / MainClock *
+                                          TransmissionStatistics.TiemScalingFactor;
+            }
+            simulationResults.MaxLostPackagesRatio /= SimulationsNumber;
+            simulationResults.Flow /= SimulationsNumber;
+            CalculateDeviations(ref simulationResults, lostPackagesList);
+        }
+
+        public void Run(double lambda,out DataTable dataTable)
+        {
+            TransmissionStatistics.EndOfTransientPhase = 250;
+            var maxTransmissions = 3000;
+            var simulationTime = 100000;
+            var MeanFailRatio = new List<double>();
+            var MaxFailRatio = new List<double>();
+            var AverageRetransmissions = new List<double>();
+            var AverageWaitingTime = new List<double>();
+            var AverageDelayTime = new List<double>();
+            var Flow = new List<double>();
+        
+            for (int i = 0; i < SimulationsNumber; ++i)
+            {
+                Run(simulationTime, i, lambda, maxTransmissions, false);
+                MeanFailRatio.Add(PackageProcess.Statistics.AverageFails);
+                MaxFailRatio.Add(PackageProcess.Statistics.MaxFailsRatio());
+                AverageRetransmissions.Add(PackageProcess.Statistics.Retransmissions/(double)TransmittersNumber);
+                AverageWaitingTime.Add(PackageProcess.Statistics.AverageWaitingTimes);
+                AverageDelayTime.Add(PackageProcess.Statistics.AvarageDelayTime);
+                var allTransmissions = (PackageProcess.Statistics.SuccesfulTransmissions +
+                         PackageProcess.Statistics.FailedTransmissions);
+                Flow.Add( (double)allTransmissions *
+                                      TransmissionStatistics.TiemScalingFactor / MainClock);
+
+            }
+
+            string[] columnNames = {"Nr Symulacji",
+                                    "Średnia Pakietowa Stopa Błedów",
+                                    "Maksymalna Pakietowa Stopa Błedów",
+                                    "Średnia Liczba Retransmisji [ms]",
+                                    "Średni Czas Oczekiwania [ms]",
+                                    "Średnie Opóźnienie",
+                                    "Przepływność [Pakiet/ms]"};
+           dataTable = new DataTable("Wyniki Symulacji");
+            DataColumn column;
+            foreach (var columnName in columnNames)
+            {
+                column = new DataColumn();
+                column.DataType = System.Type.GetType("System.Double");
+                column.ColumnName = columnName;
+                column.AutoIncrement = false;
+                column.Caption = columnName;
+                column.ReadOnly = false;
+                column.Unique = false;
+                dataTable.Columns.Add(column);
+            }
+            DataRow row;
+            for (int i = 0; i < SimulationsNumber; ++i)
+            {
+                row = dataTable.NewRow();
+                row[columnNames[0]] = i;
+                row[columnNames[1]] = MeanFailRatio[i];
+                row[columnNames[2]] = MaxFailRatio[i];
+                row[columnNames[3]] = AverageRetransmissions[i];
+                row[columnNames[4]] = AverageWaitingTime[i];
+                row[columnNames[5]] = AverageDelayTime[i];
+                row[columnNames[6]] = Flow[i];
+                dataTable.Rows.Add(row);
+
+            }
+
+            row = dataTable.NewRow();
+            row[columnNames[0]] = 0.0;
+            row[columnNames[1]] = MeanFailRatio.Average();
+            row[columnNames[2]] = MaxFailRatio.Average();
+            row[columnNames[3]] = AverageRetransmissions.Average();
+            row[columnNames[4]] = AverageWaitingTime.Average();
+            row[columnNames[5]] = AverageDelayTime.Average();
+            row[columnNames[6]] = Flow.Average();
+            dataTable.Rows.Add(row);
+
+
+            row = dataTable.NewRow();
+            row[columnNames[0]] = 0.0;
+            row[columnNames[1]] = TotalDeviation(MeanFailRatio);
+            row[columnNames[2]] = TotalDeviation(MaxFailRatio);
+            row[columnNames[3]] = TotalDeviation(AverageRetransmissions);
+            row[columnNames[4]] = TotalDeviation(AverageWaitingTime);
+            row[columnNames[5]] = TotalDeviation(AverageDelayTime);
+            row[columnNames[6]] = TotalDeviation(Flow);
+            dataTable.Rows.Add(row);
+
+        }
+
+
+        public void Run(double startLambda,double endLambda, out List<double> xValues,out List<SimulationResults> yValues  )
+        {
+            xValues = new List<double>();
+            yValues = new List<SimulationResults>();
+            var pointsNumber = 10;
+            double step = (endLambda - startLambda) / pointsNumber;
+            for (var lambda = startLambda; lambda < endLambda; lambda += step)
+            {
+                SimulationResults simulationResults;
+                xValues.Add(lambda);
+                Run(lambda,out simulationResults);
+                yValues.Add(simulationResults);
+            }
+        }
+
+        private static void CalculateDeviations(ref SimulationResults simulationResults, List<double> lostPackagesList)
+        {
+            simulationResults.LostPackagesMean = lostPackagesList.Average();
+            var totalDeviation = TotalDeviation(lostPackagesList);
+            simulationResults.ErrorUpBound = simulationResults.LostPackagesMean + totalDeviation;
+            simulationResults.ErrorLowBound = simulationResults.LostPackagesMean - totalDeviation;
+        }
+
+        private static double TotalDeviation(List<double> data)
+        {
+            var average = data.Average();
+            double standardDeviation = 0.0;
+            foreach (var d in data)
+            {
+                standardDeviation += Math.Pow(d - average, 2);
+            }
+            standardDeviation /= SimulationsNumber;
+            standardDeviation = Math.Sqrt(standardDeviation);
+            const double studentsFactor = 2.1315;
+            var totalDeviation = standardDeviation * studentsFactor / Math.Sqrt(SimulationsNumber);
+            return totalDeviation;
+        }
+
+
         private void SimulationLoop()
         {
            for(int i=0;i<TransmittersNumber;++i)
                 CreateNewProcess(i);
            
 
-            while (_mainClock < _simulationTime)
+            while (CheckTimeCondition() && CheckTransmissionsNumberCondition())
             {
                 
                 if (_mainClock % 10 == 0)
@@ -216,19 +425,10 @@ namespace WirelessNetworkComponents
                     if (_worker != null)
                     {
                         _worker.ReportProgress((int)((float)_mainClock / (float)SimulationTime * 100));
-
                     }
-                
                 }
-                
-            
                 Debug.Assert(_processes.Count != 0);
                 var current = _processes.ElementAt(0);
-                
-                if (PackageProcess.Statistics.AverageFailsInTime.ContainsKey(_mainClock) == false)
-                {
-                    PackageProcess.Statistics.AverageFailsInTime.Add(_mainClock,PackageProcess.Statistics.AverageFails);
-                }
                 _processes.RemoveAt(0);
                 
                 if (current.Value.IsSleeped)
@@ -240,12 +440,20 @@ namespace WirelessNetworkComponents
                 if (current.Value.IsTerminated == false)
                 {
                     _processes.Add(current.Value.EventTime, current.Value);
-                }
-             
+                }           
             }
             LogSimulationResults();
-         //   System.Threading.Thread.Sleep(50);
 
+        }
+
+        private bool CheckTransmissionsNumberCondition()
+        {
+            return PackageProcess.Statistics.SuccesfulTransmissions < MaxTransmissions;
+        }
+
+        private bool CheckTimeCondition()
+        {
+            return _mainClock < _simulationTime;
         }
 
         private static void GenerateSeeds(int transmittersNumber)
@@ -351,5 +559,7 @@ namespace WirelessNetworkComponents
             return text.ToString();
 
         }
+
+
     }
 }

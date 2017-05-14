@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.12.0.4518.1014\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -42,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IWirelessNetworkView.cs" />
+    <Compile Include="My_DataTable_Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WirelessNetworkController.cs" />
   </ItemGroup>
@@ -54,6 +59,9 @@
       <Project>{68e993ae-89a8-4bd0-86f0-d5d356569381}</Project>
       <Name>WirelessNetworkSimulationModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

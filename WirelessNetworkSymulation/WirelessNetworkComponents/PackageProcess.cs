@@ -10,8 +10,8 @@ namespace WirelessNetworkComponents
 {
     public class PackageProcess : Process
     {
-        private const int MinTransmissionTime = 10;
-        private const int MaxTransmissionTime = 100;
+        private const int MinTransmissionTime = 10;//10
+        private const int MaxTransmissionTime = 100;//100
         private static readonly ILog log = LogManager.GetLogger(typeof(PackageProcess));
         private static TransmissionStatistics _transmissionStatistics;
         public delegate void NewProcessBornEventHandler(object sender, EventArgs e);
@@ -41,6 +41,7 @@ namespace WirelessNetworkComponents
         private readonly int _id;
         private int _sendTime;
         private int _bornTime;
+        private int _packageRetransmissions;
         private int _succesReceiveTime;
         private CsmaCa _csmaCa;
 
@@ -53,9 +54,12 @@ namespace WirelessNetworkComponents
                Retransmissions = 0,
                DelayTimes = new List<double>(),
                WaitingTimes = new List<double>(),
-               AverageFailsInTime = new SortedDictionary<int, double>()
+               AverageFailsInTime = new SortedDictionary<int, double>(),
+               AverageRetransmissions = new SortedDictionary<int, double>(),
+               MaxFails = new List<Pair>(200)
 
             };
+           _transmissionStatistics.InitMaxFails();
         }
         public PackageProcess(PackageProcessInitDelegates initDelegates, int parenTransmitterIndex ,int globalTime, int id) : base(globalTime)
         {
@@ -64,7 +68,8 @@ namespace WirelessNetworkComponents
             _phase = (int) Phase.Born;
             _csmaCa = new CsmaCa(0,false,CsmaCa.ContentionWindowMin);
             _id = id;
-            
+            _packageRetransmissions = 0;
+
         }
 
                public enum  Phase 
@@ -186,12 +191,24 @@ namespace WirelessNetworkComponents
         {
             if (_csmaCa.Ack)
             {
+
                 LogWrite(LoggerMessages.CorrectTransmissionPhase);
                 active = false;
                 _isTerminated = true;
-                ++_transmissionStatistics.SuccesfulTransmissions;
-                Statistics.DelayTimes.Add( EventTime- BornTime);
-               OnFinalizePackageTransmission();
+                if (Statistics.TransientPhaseTransmissions == TransmissionStatistics.EndOfTransientPhase)
+                {
+                    Statistics.AverageRetransmissions.Add(Statistics.SuccesfulTransmissions, (EventTime-BornTime)/(double)TransmissionStatistics.TiemScalingFactor);
+                    Statistics.DelayTimes.Add(EventTime - BornTime);
+                    ++_transmissionStatistics.SuccesfulTransmissions;
+                    var val = _transmissionStatistics.MaxFails[_parentTransmitterIndex];
+                    ++val.Transmissions;
+                    _transmissionStatistics.MaxFails[_parentTransmitterIndex] = val;
+                }
+                else
+                {
+                    ++Statistics.TransientPhaseTransmissions;
+                }
+                OnFinalizePackageTransmission();
             }
             else
             {
@@ -199,7 +216,8 @@ namespace WirelessNetworkComponents
                 {
                     LogWrite(LoggerMessages.RetransmissionPhase);
                     active = true;
-                    ++_transmissionStatistics.Retransmissions;
+                   if (Statistics.TransientPhaseTransmissions == TransmissionStatistics.EndOfTransientPhase)
+                        ++_transmissionStatistics.Retransmissions;
                     PrepareForRetransmission();
                 }
                 else
@@ -207,7 +225,15 @@ namespace WirelessNetworkComponents
                     LogWrite(LoggerMessages.AbortTransmissionPhase);
                     active = false;
                     _isTerminated = true;
-                    ++_transmissionStatistics.FailedTransmissions;
+                    if (Statistics.TransientPhaseTransmissions == TransmissionStatistics.EndOfTransientPhase)
+                    {
+                        ++_transmissionStatistics.FailedTransmissions;
+                        ++_transmissionStatistics.SuccesfulTransmissions;
+                        var val = _transmissionStatistics.MaxFails[_parentTransmitterIndex];
+                        ++val.Transmissions;
+                        ++val.Fails;
+                        _transmissionStatistics.MaxFails[_parentTransmitterIndex] = val;
+                    }
                     OnFinalizePackageTransmission();
                 }
             }
@@ -234,9 +260,13 @@ namespace WirelessNetworkComponents
         private void TransmissionInChannel(out bool active)
         {
             SendTime1 = EventTime;
-            _transmissionStatistics.WaitingTimes.Add(SendTime1 - BornTime);
+            if (Statistics.TransientPhaseTransmissions == TransmissionStatistics.EndOfTransientPhase)
+            {
+                _transmissionStatistics.WaitingTimes.Add(SendTime1 - BornTime);
+                Statistics.WaitingTimes.Add(SendTime1 - BornTime);
+            }
             LogWrite(LoggerMessages.TransmissionInChannelPhase + " Send time: " + SendTime1);
-            Statistics.WaitingTimes.Add(SendTime1-BornTime);
+          
             _sendFrame?.Invoke(this);
             active = false;
             SetTransmissionTime();

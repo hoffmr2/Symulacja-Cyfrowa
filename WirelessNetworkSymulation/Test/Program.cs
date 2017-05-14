@@ -27,7 +27,7 @@ namespace Test
         XmlConfigurator.Configure(new FileInfo(ConfigurationSettings.AppSettings["log4net-config-file"]));           // BasicConfigurator.Configure();
             GenerateSeeds();
             Supervisor supervisor = new Supervisor(4,null);
-            supervisor.Run(1000, 0, 2.3,false);
+            supervisor.Run(1000, 0, 2.3,100,false);
         }
 
         private static void GenerateSeeds()
