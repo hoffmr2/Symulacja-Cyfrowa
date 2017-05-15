@@ -48,6 +48,7 @@ namespace WirelessNetworkSymulationView
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SimulationView));
             this.tabLambdaAnalysis = new System.Windows.Forms.TabControl();
             this.singleRun = new System.Windows.Forms.TabPage();
+            this.buttonMainSimulation = new System.Windows.Forms.Button();
             this.buttonSaveSteadyState = new System.Windows.Forms.Button();
             this.buttonClear = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -65,6 +66,8 @@ namespace WirelessNetworkSymulationView
             this.checkBoxEnableLogger = new System.Windows.Forms.CheckBox();
             this.chartSteadyState = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.generatorsAnalyTabPage = new System.Windows.Forms.TabPage();
+            this.buttonSaveExponentialPlot = new System.Windows.Forms.Button();
+            this.buttonSaveUniformPlot = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.chartUniformGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chartExponentialGeneratorAnalysis = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -99,9 +102,6 @@ namespace WirelessNetworkSymulationView
             this.chartAverageFlow = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.backgroundWorkerSimulationLoop = new System.ComponentModel.BackgroundWorker();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.buttonSaveUniformPlot = new System.Windows.Forms.Button();
-            this.buttonSaveExponentialPlot = new System.Windows.Forms.Button();
-            this.buttonMainSimulation = new System.Windows.Forms.Button();
             this.tabLambdaAnalysis.SuspendLayout();
             this.singleRun.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartSteadyState)).BeginInit();
@@ -165,6 +165,17 @@ namespace WirelessNetworkSymulationView
             this.singleRun.TabIndex = 0;
             this.singleRun.Text = "Single Run";
             this.singleRun.UseVisualStyleBackColor = true;
+            // 
+            // buttonMainSimulation
+            // 
+            this.buttonMainSimulation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonMainSimulation.Location = new System.Drawing.Point(284, 451);
+            this.buttonMainSimulation.Name = "buttonMainSimulation";
+            this.buttonMainSimulation.Size = new System.Drawing.Size(100, 23);
+            this.buttonMainSimulation.TabIndex = 16;
+            this.buttonMainSimulation.Text = "Main Simulation";
+            this.buttonMainSimulation.UseVisualStyleBackColor = true;
+            this.buttonMainSimulation.Click += new System.EventHandler(this.buttonMainSimulation_Click);
             // 
             // buttonSaveSteadyState
             // 
@@ -364,6 +375,28 @@ namespace WirelessNetworkSymulationView
             this.generatorsAnalyTabPage.TabIndex = 1;
             this.generatorsAnalyTabPage.Text = "Random Generators analysis";
             this.generatorsAnalyTabPage.UseVisualStyleBackColor = true;
+            // 
+            // buttonSaveExponentialPlot
+            // 
+            this.buttonSaveExponentialPlot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonSaveExponentialPlot.Location = new System.Drawing.Point(539, 447);
+            this.buttonSaveExponentialPlot.Name = "buttonSaveExponentialPlot";
+            this.buttonSaveExponentialPlot.Size = new System.Drawing.Size(181, 23);
+            this.buttonSaveExponentialPlot.TabIndex = 19;
+            this.buttonSaveExponentialPlot.Text = "Save Exponential";
+            this.buttonSaveExponentialPlot.UseVisualStyleBackColor = true;
+            this.buttonSaveExponentialPlot.Click += new System.EventHandler(this.buttonSaveExponentialPlot_Click);
+            // 
+            // buttonSaveUniformPlot
+            // 
+            this.buttonSaveUniformPlot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonSaveUniformPlot.Location = new System.Drawing.Point(539, 418);
+            this.buttonSaveUniformPlot.Name = "buttonSaveUniformPlot";
+            this.buttonSaveUniformPlot.Size = new System.Drawing.Size(181, 23);
+            this.buttonSaveUniformPlot.TabIndex = 18;
+            this.buttonSaveUniformPlot.Text = "Save Uniform";
+            this.buttonSaveUniformPlot.UseVisualStyleBackColor = true;
+            this.buttonSaveUniformPlot.Click += new System.EventHandler(this.buttonSaveUniformPlot_Click);
             // 
             // splitContainer1
             // 
@@ -762,37 +795,6 @@ namespace WirelessNetworkSymulationView
             this.backgroundWorkerSimulationLoop.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerSimulationLoop_DoWork);
             this.backgroundWorkerSimulationLoop.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerSimulationLoop_ProgressChanged);
             this.backgroundWorkerSimulationLoop.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerSimulationLoop_RunWorkerCompleted);
-            // 
-            // buttonSaveUniformPlot
-            // 
-            this.buttonSaveUniformPlot.Location = new System.Drawing.Point(539, 418);
-            this.buttonSaveUniformPlot.Name = "buttonSaveUniformPlot";
-            this.buttonSaveUniformPlot.Size = new System.Drawing.Size(181, 23);
-            this.buttonSaveUniformPlot.TabIndex = 18;
-            this.buttonSaveUniformPlot.Text = "Save Uniform";
-            this.buttonSaveUniformPlot.UseVisualStyleBackColor = true;
-            this.buttonSaveUniformPlot.Click += new System.EventHandler(this.buttonSaveUniformPlot_Click);
-            // 
-            // buttonSaveExponentialPlot
-            // 
-            this.buttonSaveExponentialPlot.Location = new System.Drawing.Point(539, 447);
-            this.buttonSaveExponentialPlot.Name = "buttonSaveExponentialPlot";
-            this.buttonSaveExponentialPlot.Size = new System.Drawing.Size(181, 23);
-            this.buttonSaveExponentialPlot.TabIndex = 19;
-            this.buttonSaveExponentialPlot.Text = "Save Exponential";
-            this.buttonSaveExponentialPlot.UseVisualStyleBackColor = true;
-            this.buttonSaveExponentialPlot.Click += new System.EventHandler(this.buttonSaveExponentialPlot_Click);
-            // 
-            // buttonMainSimulation
-            // 
-            this.buttonMainSimulation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonMainSimulation.Location = new System.Drawing.Point(284, 451);
-            this.buttonMainSimulation.Name = "buttonMainSimulation";
-            this.buttonMainSimulation.Size = new System.Drawing.Size(100, 23);
-            this.buttonMainSimulation.TabIndex = 16;
-            this.buttonMainSimulation.Text = "Main Simulation";
-            this.buttonMainSimulation.UseVisualStyleBackColor = true;
-            this.buttonMainSimulation.Click += new System.EventHandler(this.buttonMainSimulation_Click);
             // 
             // SimulationView
             // 

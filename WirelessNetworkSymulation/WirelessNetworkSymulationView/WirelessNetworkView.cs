@@ -176,7 +176,9 @@ namespace WirelessNetworkSymulationView
             textBoxEndLambda.Enabled = false;
             textBoxStartLambda.Enabled = false;
             buttonLambdaAnalysis.Enabled = false;
-            buttonSaveLambdaAnalysis.Enabled = true;
+            buttonSaveLambdaAnalysis.Enabled = false;
+            buttonSaveAverageFlow.Enabled = false;
+            buttonSaveMaxError.Enabled = false;
         }
 
         private void DisableGeneratorAnalysisTabControls()
@@ -187,6 +189,8 @@ namespace WirelessNetworkSymulationView
             textBoxUniformGeneratorLowBound.Enabled = false;
             textBoxUniformGeneratorUpBound.Enabled = false;
             buttonAnalyzeGenerators.Enabled = false;
+            buttonSaveExponentialPlot.Enabled = false;
+            buttonSaveUniformPlot.Enabled = false;
         }
 
         private void DisableSingleRunTabControls()
@@ -199,6 +203,7 @@ namespace WirelessNetworkSymulationView
             buttonSteadyStateAnalysis.Enabled = false;
             buttonSaveSteadyState.Enabled = false;
             buttonClear.Enabled = false;
+            buttonMainSimulation.Enabled = false;
             checkBoxEnableLogger.Enabled = false;
         }
 
@@ -215,6 +220,8 @@ namespace WirelessNetworkSymulationView
             textBoxStartLambda.Enabled = true;
             buttonLambdaAnalysis.Enabled = true;
             buttonSaveLambdaAnalysis.Enabled = true;
+            buttonSaveAverageFlow.Enabled = true;
+            buttonSaveMaxError.Enabled = true;
         }
 
         private void EnableGeneratorAnalysisTabControls()
@@ -225,6 +232,8 @@ namespace WirelessNetworkSymulationView
             textBoxUniformGeneratorLowBound.Enabled = true;
             textBoxUniformGeneratorUpBound.Enabled = true;
             buttonAnalyzeGenerators.Enabled = true;
+            buttonSaveExponentialPlot.Enabled = true;
+            buttonSaveUniformPlot.Enabled = true;
         }
 
         private void EnableSingleRunTabControls()
@@ -237,6 +246,7 @@ namespace WirelessNetworkSymulationView
             buttonSteadyStateAnalysis.Enabled = true;
             buttonSaveSteadyState.Enabled = true;
             buttonClear.Enabled = true;
+            buttonMainSimulation.Enabled = true;
             checkBoxEnableLogger.Enabled = true;
         }
 
