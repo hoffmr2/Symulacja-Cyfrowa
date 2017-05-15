@@ -54,6 +54,7 @@
     <Compile Include="RandomGeneratorsAnalyzer.cs" />
     <Compile Include="Receiever.cs" />
     <Compile Include="SimulationRandomGenerators.cs" />
+    <Compile Include="SimulationResults.cs" />
     <Compile Include="Supervisor.cs" />
     <Compile Include="TransmissionChannel.cs" />
     <Compile Include="TransmissionStatistics.cs" />

@@ -21,44 +21,7 @@ using log4net.Core;
 
 namespace WirelessNetworkComponents
 {
-    public struct SimulationResults
-    {
-        private double _lostPackagesMean;
-        private double _errorUpBound;
-        private double _errorLowBound;
-        private double _flow;
-        private double _maxLostPackagesRatio;
-
-        public double LostPackagesMean
-        {
-            get { return _lostPackagesMean; }
-            set { _lostPackagesMean = value; }
-        }
-
-        public double ErrorUpBound
-        {
-            get { return _errorUpBound; }
-            set { _errorUpBound = value; }
-        }
-
-        public double ErrorLowBound
-        {
-            get { return _errorLowBound; }
-            set { _errorLowBound = value; }
-        }
-
-        public double Flow
-        {
-            get { return _flow; }
-            set { _flow = value; }
-        }
-
-        public double MaxLostPackagesRatio
-        {
-            get { return _maxLostPackagesRatio; }
-            set { _maxLostPackagesRatio = value; }
-        }
-    };
+   
 
 public class Supervisor
     {
@@ -290,7 +253,7 @@ public class Supervisor
         {
             TransmissionStatistics.EndOfTransientPhase = 250;
             var maxTransmissions = 3000;
-            var simulationTime = 100000;
+            var simulationTime = 500000;
             var MeanFailRatio = new List<double>();
             var MaxFailRatio = new List<double>();
             var AverageRetransmissions = new List<double>();
@@ -536,14 +499,9 @@ public class Supervisor
         {
            // _logger.LoggerForceWrite("number of transmissions: " + _transmissionChannel.NumberOdTransmissions );
            // _logger.LoggerForceWrite("number of failed transmissions: " + _transmissionChannel.NumberOfFailedTransmissions);
-            double mean = 0;
-            foreach (Receiever receiever in _receievers)
-            {
-                mean += receiever.ErrorMean;
-            }
-            mean /= _receievers.Length;
+
             log.Logger.Repository.Threshold = Level.All;
-           log.Info("number of transmissions: " + mean);
+           log.Info("number of succesful transmissions: " + PackageProcess.Statistics.SuccesfulTransmissions);
             log.Info("number of  processes: " + _processes.Count);
         }
 
